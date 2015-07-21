@@ -105,7 +105,7 @@ USE_TZ = True
 
 if 'OPENSHIFT_REPO_DIR' in os.environ:
     STATIC_ROOT = os.path.join(os.environ.get('OPENSHIFT_REPO_DIR'),'wsgi','static')
-    IMAGE_ROOT = os.path.join(os.environ.get('OPENSHIFT_DATA_DIR'),'app-root/data/images/')
+    IMAGE_ROOT = os.path.join(os.environ.get('OPENSHIFT_DATA_DIR'),'images')
     STATIC_URL = '/static/'
     IMAGE_URL= '/images/'
 else:
