@@ -106,8 +106,8 @@ USE_TZ = True
 if 'OPENSHIFT_REPO_DIR' in os.environ:
     STATIC_ROOT = os.path.join(os.environ.get('OPENSHIFT_DATA_DIR'), 'static')
     IMAGE_ROOT = os.path.join(os.environ.get('OPENSHIFT_DATA_DIR'),'images')
-    STATIC_URL = os.path.join(os.environ.get('OPENSHIFT_DATA_DIR'), 'static')
-    IMAGE_URL= os.path.join(os.environ.get('OPENSHIFT_DATA_DIR'),'images')
+    STATIC_URL = os.path.join(os.environ.get('OPENSHIFT_DATA_DIR'), 'static/')
+    IMAGE_URL= os.path.join(os.environ.get('OPENSHIFT_DATA_DIR'),'images/')
 else:
 	STATIC_ROOT = 'staticfiles'
 	IMAGE_ROOT = 'images'
