@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block header%}
+	<h1 class="header-heading">Happy Birthday {{friend.user.first_name}}</h1>
+{%endblock%}
+{%block sections%}
+	<div class="section">
+		<div class="container">
+			<h2 class="heading section-heading">Posts</h2>
+			{% for post in posts %}
+				<div class="col-xs-6 col-sm-4">
+					<div class="thumbnail">
+						<img src="/{{post.image.url}}"/>
+						<div class="caption">
+							{{post.caption}}
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+	{% if user.is_authenticated %}
+	<div class="section">
+		<div class="container">
+		<h2 class="heading section-heading">New Post</h2>
+			
+		</div>
+	</div>
+	{% endif %}
+{% endblock%}
