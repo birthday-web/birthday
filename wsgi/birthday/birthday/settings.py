@@ -104,10 +104,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 if 'OPENSHIFT_REPO_DIR' in os.environ:
-    STATIC_ROOT = os.path.join(os.environ.get('OPENSHIFT_DATA_DIR'), 'static')
+    STATIC_ROOT = os.path.join(os.environ.get('OPENSHIFT_REPO_DIR'),'wsgi','static')
     IMAGE_ROOT = os.path.join(os.environ.get('OPENSHIFT_DATA_DIR'),'images')
-    STATIC_URL = os.path.join(os.environ.get('OPENSHIFT_DATA_DIR'), 'static/')
-    IMAGE_URL= os.path.join(os.environ.get('OPENSHIFT_DATA_DIR'),'images/')
+    STATIC_URL = 'static/'
+    IMAGE_URL= 'images/'
 else:
 	STATIC_ROOT = 'staticfiles'
 	IMAGE_ROOT = 'images'
