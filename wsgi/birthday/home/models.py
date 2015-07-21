@@ -5,7 +5,7 @@ from time import strftime
 from django.conf import settings
 
 def get_friend_image_path(instance,filename):
-	base=settings.IMAGE_URL+'friends/'
+	base=settings.IMAGE_ROOT+'friends/'
 	filename=datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f_')+filename
 	return base+filename
 	
@@ -28,7 +28,7 @@ class Friend(models.Model):
 	def __str__(self):
 		return self.user.first_name+" "+self.user.last_name+"("+self.user.username+")"
 	def image_tag(self):
-		return u'<img src="/%s" width=200/>' % self.image.url
+		return u'<img src="%s" width=200/>' % self.image.url
 	image_tag.short_description = 'Image'
 	image_tag.allow_tags = True
 	
@@ -60,6 +60,6 @@ class UserEnroll(models.Model):
 	def __str__(self):
 		return self.first_name+" "+self.last_name+"("+self.username+")"
 	def image_tag(self):
-		return u'<img src="/%s" width=200/>' % self.image.url
+		return u'<img src="%s" width=200/>' % self.image.url
 	image_tag.short_description = 'Image'
 	image_tag.allow_tags = True
