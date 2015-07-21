@@ -26,8 +26,3 @@ echo "Executing 'python $OPENSHIFT_REPO_DIR/wsgi/birthday/manage.py collectstati
 # GETTING-STARTED: change 'myproject' to your project name:
 python "$OPENSHIFT_REPO_DIR"wsgi/birthday/manage.py collectstatic --noinput
 
-if [ ! -d $OPENSHIFT_DATA_DIR/images ]; then
-mkdir $OPENSHIFT_DATA_DIR/images
-fi
-
-ln -sf $OPENSHIFT_DATA_DIR/images $OPENSHIFT_REPO_DIR/wsgi/images
