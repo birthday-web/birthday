@@ -16,8 +16,8 @@ DEPLOY = True
 DJ_PROJECT_DIR = os.path.dirname(__file__)
 BASE_DIR = os.path.dirname(DJ_PROJECT_DIR)
 
-IMAGE_ROOT =os.environ['OPENSHIFT_ENV_VAR']+'/images'
-IMAGE_URL= os.environ['OPENSHIFT_ENV_VAR']+'/images/'
+IMAGE_ROOT =os.environ['OPENSHIFT_DATA_DIR']+'/images'
+IMAGE_URL= os.environ['OPENSHIFT_DATA_DIR']+'/images/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -106,8 +106,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = os.environ['OPENSHIFT_ENV_VAR']+'/static/'
-STATIC_ROOT = os.environ['OPENSHIFT_ENV_VAR']+'/staticfiles'
+STATIC_URL = os.environ['OPENSHIFT_DATA_DIR']+'/static/'
+STATIC_ROOT = os.environ['OPENSHIFT_DATA_DIR']+'/staticfiles'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
