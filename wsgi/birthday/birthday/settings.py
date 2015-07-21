@@ -107,7 +107,7 @@ STATIC_URL = '/static/'
 IMAGE_URL= '/images/'
 if 'OPENSHIFT_REPO_DIR' in os.environ:
     STATIC_ROOT = os.path.join(os.environ.get('OPENSHIFT_REPO_DIR'), 'wsgi', 'static')
-    IMAGE_ROOT = os.path.join(os.environ.get('OPENSHIFT_REPO_DIR'),'images')
+    IMAGE_ROOT = os.path.join(os.environ.get('OPENSHIFT_DATA_DIR'),'images')
 else:
 	STATIC_ROOT = 'staticfiles'
 	IMAGE_ROOT = 'images'
