@@ -5,7 +5,7 @@ from time import strftime
 from django.conf import settings
 
 def get_friend_image_path(instance,filename):
-	base=settings.IMAGE_ROOT+'friends/'
+	base=settings.IMAGE_URL+'friends/'
 	filename=datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f_')+filename
 	return base+filename
 	
