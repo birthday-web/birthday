@@ -5,19 +5,19 @@ from time import strftime
 from django.conf import settings
 
 def get_friend_image_path(instance,filename):
-	base=settings.IMAGE_URL+'friends/'
+	base=settings.IMAGE_ROOT+'friends/'
 	filename=datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f_')+filename
 	return base+filename
 	
 
 def get_post_image_path(instance,filename):
-	base=settings.IMAGE_URL+'posts/'
+	base=settings.IMAGE_ROOT+'posts/'
 	filename=datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f_')+filename
 	return base+filename
 	
 
 def get_enroll_image_path(instance,filename):
-	base=settings.IMAGE_URL+'enrolls/'
+	base=settings.IMAGE_ROOT+'enrolls/'
 	filename=datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f_')+filename
 	return base+filename
 	
