@@ -11,13 +11,10 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
-DEPLOY = True
-
 DJ_PROJECT_DIR = os.path.dirname(__file__)
 BASE_DIR = os.path.dirname(DJ_PROJECT_DIR)
 
-IMAGE_ROOT =os.environ['OPENSHIFT_DATA_DIR']+'/images'
-IMAGE_URL= os.environ['OPENSHIFT_DATA_DIR']+'/images/'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -30,7 +27,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -106,8 +103,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = os.environ['OPENSHIFT_DATA_DIR']+'/static/'
-STATIC_ROOT = os.environ['OPENSHIFT_DATA_DIR']+'/staticfiles'
+STATIC_URL = '/static/'
+IMAGE_URL= '/images/'
+if 'OPENSHIFT_REPO_DIR' in os.environ:
+    STATIC_ROOT = os.path.join(os.environ.get('OPENSHIFT_REPO_DIR'), 'wsgi', 'static')
+    IMAGE_ROOT = os.path.join(os.environ.get('OPENSHIFT_REPO_DIR'),'images')
+else:
+	STATIC_ROOT = 'staticfiles'
+	IMAGE_ROOT = 'images'
+	
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
