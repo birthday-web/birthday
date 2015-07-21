@@ -1,4 +1,0 @@
-RewriteEngine On
-RewriteRule ^application/static/(.+)$ /static/$1 [L]
-RewriteRule ^application/images/(.+)$ /static/$1 [L]
-

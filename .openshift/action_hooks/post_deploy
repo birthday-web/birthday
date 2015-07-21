@@ -3,4 +3,4 @@
 # is deployed and started.  This script gets executed directly, so 
 # it could be python, php, ruby, etc.
 
-ln -sf $OPENSHIFT_DATA_DIR/images $OPENSHIFT_REPO_DIR/wsgi/static/images
+ln -sf $OPENSHIFT_DATA_DIR/images $OPENSHIFT_REPO_DIR/wsgi/images
