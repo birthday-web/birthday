@@ -103,15 +103,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = '/static/'
 if 'OPENSHIFT_REPO_DIR' in os.environ:
     STATIC_ROOT = os.path.join(os.environ.get('OPENSHIFT_REPO_DIR'), 'wsgi', 'static')
     IMAGE_ROOT = os.path.join(os.environ.get('OPENSHIFT_DATA_DIR'),'images')
-    IMAGE_URL= 'app-root/data/images/'
+    IMAGE_URL= '/app-root/data/images/'
+    STATIC_URL = '/app-root/data/static/'
 else:
 	STATIC_ROOT = 'staticfiles'
 	IMAGE_ROOT = 'images'
 	IMAGE_URL= 'images/'
+	STATIC_URL = 'static/'
 	
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATICFILES_DIRS = (
