@@ -14,7 +14,6 @@ def get_post_image_path(instance,filename):
 	base=settings.IMAGE_ROOT+'posts/'
 	filename=datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f_')+filename
 	return base+filename
-	
 
 def get_enroll_image_path(instance,filename):
 	base=settings.IMAGE_ROOT+'enrolls/'
@@ -32,6 +31,7 @@ class Friend(models.Model):
 		return "/".join(tmp[-3:])
 	def image_tag(self):
 		return u'<img src="/%s" width=150 />' % self.get_img_url()
+	image_url=property(get_img_url)
 	image_tag.short_description = 'Image'
 	image_tag.allow_tags = True
 	
