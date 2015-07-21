@@ -27,8 +27,11 @@ class Friend(models.Model):
 	date_of_birth=models.DateField("Date of Birth")
 	def __str__(self):
 		return self.user.first_name+" "+self.user.last_name+"("+self.user.username+")"
+	def get_img_url(self):
+		tmp=self.image.url.split("/")
+		return "/".join(tmp[:3])
 	def image_tag(self):
-		return u'<img src="/%s" width=150 />' % self.image.url
+		return u'<img src="/%s" width=150 />' % self.get_img_url
 	image_tag.short_description = 'Image'
 	image_tag.allow_tags = True
 	
