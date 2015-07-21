@@ -49,9 +49,9 @@ MIDDLEWARE_CLASSES = (
 )
 
 # GETTING-STARTED: change 'myproject' to your project name:
-ROOT_URLCONF = 'myproject.urls'
+ROOT_URLCONF = 'birthday.urls'
 
-WSGI_APPLICATION = 'myproject.wsgi.application'
+WSGI_APPLICATION = 'birthday.wsgi.application'
 
 
 # Database
