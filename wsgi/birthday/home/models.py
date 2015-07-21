@@ -2,22 +2,22 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 from time import strftime
-
+from django.conf import settings
 
 def get_friend_image_path(instance,filename):
-	base='images/friends/'
+	base=settings.IMAGE_URL+'friends/'
 	filename=datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f_')+filename
 	return base+filename
 	
 
 def get_post_image_path(instance,filename):
-	base='images/posts/'
+	base=settings.IMAGE_URL+'posts/'
 	filename=datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f_')+filename
 	return base+filename
 	
 
 def get_enroll_image_path(instance,filename):
-	base='images/enrolls/'
+	base=settings.IMAGE_URL+'enrolls/'
 	filename=datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f_')+filename
 	return base+filename
 	

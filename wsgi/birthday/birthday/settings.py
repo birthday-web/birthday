@@ -111,7 +111,7 @@ if 'OPENSHIFT_REPO_DIR' in os.environ:
 else:
 	STATIC_ROOT = 'staticfiles'
 	IMAGE_ROOT = 'images'
-	IMAGE_URL= '/images/'
+	IMAGE_URL= 'images/'
 	
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATICFILES_DIRS = (
