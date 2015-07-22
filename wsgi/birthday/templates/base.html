@@ -8,6 +8,7 @@
 	<!-- Google Fonts -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Karla:400,700' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Tangerine:400,700' rel='stylesheet' type='text/css'>
 	
 	<!--Fontawesome-->
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -28,7 +29,7 @@
 			{{sidebar_msg}}
 			{% if user.is_authenticated %}
 				<div class="thumbnail">
-					<img src="{{user.friend.image.url}}">
+					<img src="/{{user.friend.image_url}}">
 				</div>
 				<h5 class="heading">{{user.get_full_name}}</h5>
 				<p>
@@ -36,12 +37,12 @@
 					<strong class="heading">Email</strong><br>{{user.email}}<br><br>
 					<strong class="heading">Date of Birth</strong><br>{{user.friend.date_of_birth}}<br><br>
 				</p>
-				<form class="sidebar-form" method="post" action=".">
+				<form class="sidebar-form" method="post" action="/.">
 					{% csrf_token %}
 					<input name="logout_button" class="btn btn-primary" type="Submit" value="Sign out">
 				</form>
 			{% else %}
-				<form action="." method="post" class="sidebar-form">
+				<form action="/." method="post" class="sidebar-form">
 					{% csrf_token %}
 					{%for field in login_form.visible_fields%}
 						<div class="form-group">

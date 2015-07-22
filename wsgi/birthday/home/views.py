@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 import datetime
 
+
 def get_by_bday():
 	upc=[]
 	mnt_srt=[]
@@ -74,7 +75,29 @@ def index(request):
 	return render(request,'home/index.html',{'sidebar_msg':sidebar_msg,'submit_status':submit_status,'is_index':True,'form':user_enroll_form,'friends':friends,'login_form':login_form})
 
 def listPosts(request,username):
-	user=User.objects.get(username=username)
-	friend=Friend.objects.get(user=user)
-	return render(request,'home/list_posts.html',{'friend':friend,'posts':friend.post_set.all()})
-
+	#user=User.objects.get(username=username)
+	friend=Friend.objects.get(user=User.objects.get(username=username))
+	if request.method=='POST':
+		author=Friend.objects.get(user=request.user)
+		if 'post_button' in request.POST:
+			post_form=PostForm(request.POST,request.FILES)
+			if post_form.is_valid():
+				post=post_form.save(commit=False)
+				post.author=author
+				post.friend=friend
+				post.save()
+				post_form=PostForm()
+		elif 'comment_button' in request.POST:
+			comment_form=CommentForm(request.POST)
+			if comment_form.is_valid():
+				print 'comment valid'
+				comment=comment_form.save(commit=False)
+				comment.author=author
+				comment.save()
+			else:
+				print 'comment invalid'
+			post_form=PostForm()
+	else:
+		post_form=PostForm()
+	return render(request,'home/list_posts.html',{'friend':friend,'posts':friend.post_set.all(),'login_form':LoginForm(),'post_form':post_form,'comment_form':CommentForm()})
+	

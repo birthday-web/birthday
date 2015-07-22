@@ -45,3 +45,20 @@ class UserEnrollForm(forms.ModelForm):
 				'required':"Select your image."
             }
         }
+class PostForm(forms.ModelForm):
+	class Meta:
+		model=Post
+		fields=['image','caption']
+		widgets={
+			'image':forms.FileInput(attrs={'class': 'form-control file-input','type':'file','title':'Post Image'}),
+			'caption':forms.TextInput(attrs={'class': 'form-control','required':True,'placeholder':'Caption'}),
+			}
+			
+class CommentForm(forms.ModelForm):
+	class Meta:
+		model=Comment
+		fields=['comment','post']
+		widgets={
+			'comment':forms.TextInput(attrs={'class': 'form-control','required':True,'placeholder':'Comment'}),
+			'post':forms.HiddenInput(),
+			}

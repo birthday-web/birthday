@@ -1,10 +1,12 @@
 $font-karla: 'Karla', sans-serif;
-$front-os: 'Open Sans', sans-serif;
+$font-os: 'Open Sans', sans-serif;
+$font-tang: 'Tangerine', cursive;
 
 $font-color: rgba(0, 0, 0, 0.6);
 $font-color-inverse: rgba(255,255,255,0.6);
 $font-color-light: lighten($font-color,20%);
 $font-color-dark: darken($font-color,20%);
+
 $bg-color: #fff;
 $transition-duration: 0.3s;
 $link-color: #f67280;
@@ -28,12 +30,12 @@ h3,
 h4,
 h5,
 h6{
-	font: $font-karla;
+	font-family: $font-karla;
 	font-weight: 500;
 	line-height: 1.1;
 	color: inherit;
 	text-align:center;
-	text-transform:uppercase;
+	text-transform:capitalize;
 	.small{
 		font-weight: normal;
 		line-height: 1;
@@ -92,7 +94,7 @@ a{
 	}
 }
 body{
-	font-family: $front-os;
+	font-family: $font-os;
 	font-size: 13px;
 	font-weight:400;
 	line-height: 1.8;
@@ -476,4 +478,17 @@ body{
 		padding:10px;
 	}
 	
+}
+
+.comments{
+	list-style-type:none;
+	text-align:left;
+	padding-left:0;
+	li{
+		border-top:1px solid #EEE;
+		h6{
+			font-weight:bold;
+			text-align:left;
+		}
+	}
 }

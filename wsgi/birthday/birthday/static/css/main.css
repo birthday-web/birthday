@@ -5,12 +5,12 @@ h3,
 h4,
 h5,
 h6 {
-  font: "Karla", sans-serif;
+  font-family: "Karla", sans-serif;
   font-weight: 500;
   line-height: 1.1;
   color: inherit;
   text-align: center;
-  text-transform: uppercase; }
+  text-transform: capitalize; }
   h1 .small,
   h2 .small,
   h3 .small,
@@ -370,5 +370,15 @@ body {
     font-size: 11px;
     width: 100%;
     padding: 10px; }
+
+.comments {
+  list-style-type: none;
+  text-align: left;
+  padding-left: 0; }
+  .comments li {
+    border-top: 1px solid #EEE; }
+    .comments li h6 {
+      font-weight: bold;
+      text-align: left; }
 
 /*# sourceMappingURL=main.css.map */
