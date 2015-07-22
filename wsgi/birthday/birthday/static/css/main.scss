@@ -262,13 +262,16 @@ body{
 	padding: 60px;
 	font-family: $font-tang;
 	font-size:40px;
+	font-weight: 700;
 	text-align:center;
 	margin-bottom:40px;
 	background-color:$header-bg-color;
-	background:url("/images/pattern.png");
+	text-shadow:2px 2px #333;
+	background:url("/images/core/pattern.png");
 	color:$navbar-default-color;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 	.header-heading{	
+		text-shadow:2px 2px #333;
 		font-weight: 700;
 		font-family: inherit;
 		text-transform:capitalize;
@@ -508,6 +511,5 @@ body{
 		top:-50px;
 		vertical-align:center;
 		width:100%;
-		text-shadow:2px 2px #333;
 	}
 }

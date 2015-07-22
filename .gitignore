@@ -5,3 +5,6 @@
 *~
 .project
 .pydevproject
+wsgi/birthday/images/friends/*
+wsgi/birthday/images/posts/*
+wsgi/birthday/images/*.*
