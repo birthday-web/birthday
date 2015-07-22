@@ -35,7 +35,8 @@ h6{
 	line-height: 1.1;
 	color: inherit;
 	text-align:center;
-	text-transform:capitalize;
+	text-transform:uppercase;
+	
 	.small{
 		font-weight: normal;
 		line-height: 1;
@@ -100,11 +101,12 @@ body{
 	line-height: 1.8;
 	color: $font-color;
 	background-color: $bg-color;
-	transition: margin $transition-duration;
+	transition: margin $transition-duration;	
 	@media (min-width: 360px){
 		min-width:360px;
 	}
 }
+
 /*Navbar default when scroll postion is top*/
 .navbar{
 	border-color:$navbar-default-bg-color;
@@ -208,7 +210,8 @@ body{
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 	.navbar-brand{
 		color:$navbar-inverse-color;
-		background-color:$navbar-inverse-bg-color;
+		
+		
 	}
 	.navbar-nav{
 		li{
@@ -257,15 +260,20 @@ body{
 }
 .header{
 	padding: 60px;
+	font-family: $font-tang;
+	font-size:40px;
+	text-align:center;
 	margin-bottom:40px;
 	background-color:$header-bg-color;
+	background:url("/images/pattern.png");
 	color:$navbar-default-color;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-	.header-heading{
+	.header-heading{	
 		font-weight: 700;
-		text-align:center;
-		text-transform:uppercase;
-		font-size:30px;
+		font-family: inherit;
+		text-transform:capitalize;
+		font-size:70px;
+		
 	}
 }
 .header-inverse{
@@ -485,10 +493,21 @@ body{
 	text-align:left;
 	padding-left:0;
 	li{
-		border-top:1px solid #EEE;
+		border-bottom:1px solid #EEE;
 		h6{
 			font-weight:bold;
 			text-align:left;
 		}
+	}
+}
+.header-box{
+	text-align:center;
+	position:relative;
+	h1{
+		position:relative;
+		top:-50px;
+		vertical-align:center;
+		width:100%;
+		text-shadow:2px 2px #333;
 	}
 }

@@ -3,12 +3,16 @@
 {% load staticfiles %}
 
 {% block header%}
-	<h1 class="header-heading">Happy Birthday {{friend.user.get_full_name|default:friend.user.username}}</h1>
+	<div class="header-box">
+		<img src="/images/ballons.png" width="200px">
+		<h1 class="header-heading">Happy Birthday {{friend.user.get_full_name|default:friend.user.username}}</h1>
+	</div>
 {%endblock%}
 {%block sections%}
 	<div class="section">
 		<div class="container">
-			<h2 class="heading section-heading">Posts - {{friend.user.get_full_name}}</h2>
+			<h2 class="heading section-heading">Posts from your friends</h2>
+			
 			{% for post in posts %}
 				<div class="col-xs-6 col-sm-4">
 					<div class="thumbnail">
@@ -16,14 +20,14 @@
 						<div class="caption">
 							{{post.caption}}
 							<hr>
-							Author - <a href="/posts/{{post.author.user.username}}">{{post.author.user.get_full_name}}</a>
+							Author - <a href="/posts/{{post.author.user.username}}">{{post.author.user.get_full_name}}</a><hr>
 							{% if post.comment_set %}
 								
 								<div >
 									<ul class="comments">
 									{% for comment in post.comment_set.all %}
 										<li>
-											<h6>{{comment.author.user.get_full_name}}</h6>
+											<a href="/posts/{{comment.author.user.username}}" ><h6>{{comment.author.user.get_full_name}}</h6></a>
 											<p>{{comment.comment}}</p>
 										</li>
 									{% endfor%}
@@ -43,7 +47,7 @@
 										{{field.errors}}
 									{%endfor%}
 									<div class="form-group">
-										<input class="btn btn-primary" name="comment_button" type="submit" value="comment"/>
+										<button class="btn btn-primary" name="comment_button" type="submit"><i class="fa fa-send"></i></button>
 									</div>
 								</form>
 							{%endif%}
@@ -56,7 +60,7 @@
 	{% if user.is_authenticated %}
 	<div class="section">
 		<div class="container">
-		<h2 class="heading section-heading">Create New</h2>
+		<h2 class="heading section-heading">Create new post for him</h2>
 			<form action="." method="post" enctype="multipart/form-data" class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2">
 				{% csrf_token %}
 				{% for field in post_form.visible_fields%}

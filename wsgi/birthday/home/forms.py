@@ -51,7 +51,7 @@ class PostForm(forms.ModelForm):
 		fields=['image','caption']
 		widgets={
 			'image':forms.FileInput(attrs={'class': 'form-control file-input','type':'file','title':'Post Image'}),
-			'caption':forms.TextInput(attrs={'class': 'form-control','required':True,'placeholder':'Caption'}),
+			'caption':forms.Textarea(attrs={'class': 'form-control','required':True,'placeholder':'Caption'}),
 			}
 			
 class CommentForm(forms.ModelForm):
