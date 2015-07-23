@@ -79,7 +79,7 @@ def listPosts(request,username):
 	friend=Friend.objects.get(user=User.objects.get(username=username))
 	if request.method=='POST':
 		author=Friend.objects.get(user=request.user)
-		if 'post_button' in request.POST:
+		if 'post_button' in request.POST and request.user.is_authenticated():
 			post_form=PostForm(request.POST,request.FILES)
 			if post_form.is_valid():
 				post=post_form.save(commit=False)
@@ -87,7 +87,7 @@ def listPosts(request,username):
 				post.friend=friend
 				post.save()
 				post_form=PostForm()
-		elif 'comment_button' in request.POST:
+		elif 'comment_button' in request.POST and request.user.is_authenticated():
 			comment_form=CommentForm(request.POST)
 			if comment_form.is_valid():
 				print 'comment valid'
