@@ -76,8 +76,11 @@ class UserEnroll(models.Model):
 	image=models.ImageField(upload_to=get_enroll_image_path)
 	def __str__(self):
 		return self.first_name+" "+self.last_name+"("+self.username+")"
+	def get_img_url(self):
+		tmp=self.image.url.split("/")
+		return "/".join(tmp[-3:])
 	def image_tag(self):
-		return u'<img src="/%s" width=200/>' % self.image.url
+		return u'<img src="/%s" width=200/>' % self.get_image_url()
 	image_tag.short_description = 'Image'
 	image_tag.allow_tags = True
 	def save(self,*args, **kwargs):
