@@ -77,12 +77,16 @@ WSGI_APPLICATION = 'birthday.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
+if 'OPENSHIFT_REPO_DIR' in os.environ:
+	DB_BASE_DIR=os.environ['OPENSHIFT_DATA_DIR']
+else:
+	DB_BASE_DIR=BASE_DIR
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         # GETTING-STARTED: change 'db.sqlite3' to your sqlite3 database:
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(DB_BASE_DIR, 'db.sqlite3'),
     }
 }
 
