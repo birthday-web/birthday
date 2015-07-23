@@ -27,7 +27,11 @@
 	<div class="sidebar">
 		<a class="close-sidebar js-toggle-sidebar" ><i class="fa fa-close"></i></a>
 		<div class="sidebar-container">
-			{{sidebar_msg}}
+			{% if sidebar_msg %}
+				<div class="alert alert-info">
+					{{sidebar_msg}}
+				</div>
+			{%endif%}
 			{% if user.is_authenticated %}
 				<div class="thumbnail">
 					<img src="/{{user.friend.image_url}}">
@@ -44,6 +48,7 @@
 					<input name="logout_button" class="btn btn-primary" type="Submit" value="Sign out">
 				</form>
 			{% else %}
+				<h4 class="heading">Login </h4>
 				<form action="/." method="post" class="sidebar-form">
 					{% csrf_token %}
 					{%for field in login_form.visible_fields%}

@@ -51,16 +51,16 @@ def index(request):
 				if user.is_active:
 					login(request,user)
 					print 'active'
-					sidebar_msg='Successfully sign in'
+					sidebar_msg='Welcome !!'
 				else:
 					print 'inactive'
-					sidebar_msg='You are inavtive contact admin'
+					sidebar_msg='Your account is inavtive contact admin'
 			else:
-				print 'no such user'
-				sidebar_msg='no such user'
+				print 'Login Failed'
+				sidebar_msg='Login attemp failed! check username and password'
 		elif 'logout_button' in request.POST:
 			logout(request)
-			sidebar_msg='Successfully sign  out'
+			sidebar_msg='Successfully logged out'
 		elif 'request_button' in request.POST:			
 			user_enroll_form=UserEnrollForm(request.POST,request.FILES);
 			if user_enroll_form.is_valid():
