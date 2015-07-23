@@ -7,7 +7,6 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 import datetime
 
-
 def get_by_bday():
 	upc=[]
 	mnt_srt=[]
