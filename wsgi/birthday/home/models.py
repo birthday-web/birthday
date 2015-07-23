@@ -54,9 +54,6 @@ class Post(models.Model):
 	author=models.ForeignKey(Friend, related_name="author")
 	def __str__(self):
 		return "("+str(self.image)+")"+self.caption
-	def get_img_url(self):
-		tmp=self.image.url.split("/")
-		return "/".join(tmp[-3:])
 	def save(self,*args, **kwargs):
 		super(Post,self).save()
 		resize_image(self.image)
