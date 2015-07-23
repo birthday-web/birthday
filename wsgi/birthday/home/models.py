@@ -80,7 +80,7 @@ class UserEnroll(models.Model):
 		tmp=self.image.url.split("/")
 		return "/".join(tmp[-3:])
 	def image_tag(self):
-		return u'<img src="/%s" width=200/>' % self.get_image_url()
+		return u'<img src="/%s" width=200/>' % self.get_img_url()
 	image_tag.short_description = 'Image'
 	image_tag.allow_tags = True
 	def save(self,*args, **kwargs):
