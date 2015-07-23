@@ -25,17 +25,19 @@
 </head>
 <body>
 	<div class="sidebar">
+		<a class="close-sidebar js-toggle-sidebar" ><i class="fa fa-close"></i></a>
 		<div class="sidebar-container">
 			{{sidebar_msg}}
 			{% if user.is_authenticated %}
 				<div class="thumbnail">
 					<img src="/{{user.friend.image_url}}">
 				</div>
-				<h5 class="heading">{{user.get_full_name}}</h5>
+				<h4 class="heading">{{user.get_full_name}}</h4>
 				<p>
-					<strong class="heading">Username</strong><br>{{user.username}}<br><br>
-					<strong class="heading">Email</strong><br>{{user.email}}<br><br>
-					<strong class="heading">Date of Birth</strong><br>{{user.friend.date_of_birth}}<br><br>
+					<strong class="heading">Username</strong><br>{{user.username}}<br>
+					<strong class="heading">Email</strong><br>{{user.email}}<br>
+					<strong class="heading">Date of Birth</strong><br>{{user.friend.date_of_birth}}<br>
+					<strong class="heading">Number of Posts</strong><br>{{user.friend.post_set.count}}<br>
 				</p>
 				<form class="sidebar-form" method="post" action="/.">
 					{% csrf_token %}
@@ -74,7 +76,7 @@
 						<li><span class="btn-separator"></span></li>
 						<li><a class="js-toggle-sidebar" id='#login'>
 								<span class="fa fa-bars"></span>
-								<span class="navbar-collapsed-text">Sign in</span>
+								<span class="navbar-collapsed-text">Sidebar</span>
 							</a>
 						</li>
 					</ul>

@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from datetime import datetime
 from time import strftime
 from django.conf import settings
+from PIL import Image
 
 def get_friend_image_path(instance,filename):
 	base=settings.IMAGE_ROOT+'friends/'
@@ -20,6 +21,14 @@ def get_enroll_image_path(instance,filename):
 	filename=datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f_')+filename
 	return base+filename
 	
+
+def resize_image(image):
+	size=(350,350)
+	filename=str(image.path)
+	new_image = Image.open(filename)
+	new_image.thumbnail(size, Image.ANTIALIAS)
+	new_image.save(filename)
+	
 class Friend(models.Model):
 	user = models.OneToOneField(User)
 	image=models.ImageField(upload_to=get_friend_image_path)
@@ -34,7 +43,9 @@ class Friend(models.Model):
 	image_url=property(get_img_url)
 	image_tag.short_description = 'Image'
 	image_tag.allow_tags = True
-	
+	def save(self,*args, **kwargs):
+		super(Friend,self).save()
+		resize_image(self.image)
 	
 class Post(models.Model):
 	image=models.ImageField(upload_to=get_post_image_path)
@@ -43,7 +54,10 @@ class Post(models.Model):
 	author=models.ForeignKey(Friend, related_name="author")
 	def __str__(self):
 		return "("+str(self.image)+")"+self.caption
-		
+	def save(self,*args, **kwargs):
+		super(Post,self).save()
+		resize_image(self.image)
+
 class Comment(models.Model):
 	comment=models.CharField(max_length=200)
 	post=models.ForeignKey(Post)
@@ -66,3 +80,6 @@ class UserEnroll(models.Model):
 		return u'<img src="/%s" width=200/>' % self.image.url
 	image_tag.short_description = 'Image'
 	image_tag.allow_tags = True
+	def save(self,*args, **kwargs):
+		super(UserEnroll,self).save()
+		resize_image(self.image)

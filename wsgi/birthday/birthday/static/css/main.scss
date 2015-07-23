@@ -10,7 +10,8 @@ $font-color-dark: darken($font-color,20%);
 $bg-color: #fff;
 $transition-duration: 0.3s;
 $link-color: #f67280;
-$header-bg-color:#777;
+$header-bg-color:#fff;
+$header-color:#777;
 $footer-bg-color:#eee;
 
 $twitter-color:#55acee;
@@ -123,9 +124,13 @@ body{
 	background-color:$navbar-default-bg-color;
 	.navbar-brand{
 		color:$navbar-default-color;
-		&:hover{
+		&:hover,&:focus &:hover{
 			color:$navbar-link-color;
 		}
+		&:focus{
+			color:$navbar-default-color;
+		}
+		
 	}
 	.navbar-nav{
 		li{
@@ -155,7 +160,7 @@ body{
 		content: ' ';
 		display: block;
 		float: left;
-		background: #ADADAD;
+		background: $navbar-default-color;
 		margin: 12px 0 0 0;
 		height: 24px;
 		width: 1px;
@@ -167,6 +172,7 @@ body{
 		ul{
 			li{
 				a{
+					color:$header-color;
 					.fa-bars{
 						display:none;
 					}
@@ -186,6 +192,7 @@ body{
 			ul{
 				li{
 					a{
+						color:$navbar-default-color;
 						.fa-bars{
 							display:block;
 						}
@@ -210,8 +217,9 @@ body{
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 	.navbar-brand{
 		color:$navbar-inverse-color;
-		
-		
+		&:focus{
+			color:$navbar-inverse-color;
+		}
 	}
 	.navbar-nav{
 		li{
@@ -225,10 +233,20 @@ body{
 			color:$navbar-inverse-color;
 		}
 	}
+	.btn-separator:after {
+		background: $navbar-inverse-color;
+	}
 	.in{
 		background-color:transparent;
 		border-radius:0;
 		box-shadow:none;
+		ul{
+			li{
+				a{
+				color:$navbar-inverse-color;
+				}
+			}
+		}
 	}
 }
 
@@ -333,8 +351,8 @@ body{
 	.sidebar-container{
 		min-height: 100%;
 		height: auto;
-		padding-top: 30px;
-		padding-bottom: 90px;
+		padding-top: 20px;
+		padding-bottom: 20px;
 		padding-right:25px;
 		padding-left:25px;
 		p{
@@ -511,5 +529,16 @@ body{
 		top:-50px;
 		vertical-align:center;
 		width:100%;
+	}
+}
+.close-sidebar{
+	color:white;
+	display:block;
+	position:absolute;
+	right:5px;
+	background:none;
+	border:0;
+	@media (min-width:768px){
+		display:none;
 	}
 }
