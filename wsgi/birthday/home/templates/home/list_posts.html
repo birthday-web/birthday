@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
-
 {% load staticfiles %}
 {% load img_url%}
 {% block header%}
 	<div class="header-box">
-		<img src="/images/core/ballons.png" width="200px">
+		<img src="{%static 'images/core/ballons.png'%}" width="200px">
 		<h1 class="header-heading">Happy Birthday {{friend.user.get_full_name|default:friend.user.username}}</h1>
 	</div>
 {%endblock%}
@@ -21,7 +20,7 @@
 							<a href="delpost/{{post.id}}" title="Delete this post"><i class="fa fa-close"></i></a>
 						</div>
 						{%endif%}
-						<img src="/{{post.image|get_image_url}}"/>
+						<img src="{{post.image|get_image_url }}"/>
 						<div class="caption">
 							{{post.caption}}
 							<hr>
