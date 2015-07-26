@@ -37,7 +37,7 @@ class Friend(models.Model):
 		return self.user.first_name+" "+self.user.last_name+"("+self.user.username+")"
 	def get_img_url(self):
 		tmp=self.image.url.split("/")
-		return "/".join(tmp[-3:])
+		return 'static/'+"/".join(tmp[-3:])
 	def image_tag(self):
 		return u'<img src="/%s" width=150 />' % self.get_img_url()
 	image_url=property(get_img_url)
@@ -78,7 +78,7 @@ class UserEnroll(models.Model):
 		return self.first_name+" "+self.last_name+"("+self.username+")"
 	def get_img_url(self):
 		tmp=self.image.url.split("/")
-		return "/".join(tmp[-3:])
+		return 'static/'+"/".join(tmp[-3:])
 	def image_tag(self):
 		return u'<img src="/%s" width=200/>' % self.get_img_url()
 	image_tag.short_description = 'Image'
