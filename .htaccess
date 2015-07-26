@@ -1,4 +1,4 @@
 RewriteEngine On
-RewriteRule ^application/static/(.+)$ /static/$1 [L]
-RewriteRule ^application/images/(.+)$ /images/$1 [L]
+RewriteRule ^application/static/(.+)$ /var/www/static/$1 [L]
+RewriteRule ^application/images/(.+)$ /home/zeeshan/Desktop/Websites/openshift/birthday/wsgi/birthday/images/$1 [L]
 

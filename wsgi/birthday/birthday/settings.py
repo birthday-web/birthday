@@ -28,7 +28,7 @@ if 'OPENSHIFT_REPO_DIR' in os.environ:
 	TEMPLATE_DEBUG = False
 else:
 	DEBUG = True
-	TEMPLATE_DEBUG = True
+	TEMPLATE_DEBUG = False
 	
 ALLOWED_HOSTS = ['*']
 
@@ -116,15 +116,16 @@ if 'OPENSHIFT_REPO_DIR' in os.environ:
     STATIC_URL = '/static/'
     IMAGE_URL= '/images/'
 else:
-	STATIC_ROOT = 'staticfiles'
-	IMAGE_ROOT = 'images/'
+	STATIC_ROOT = '/var/www/static/'
+	IMAGE_ROOT = '/home/zeeshan/Desktop/Websites/openshift/birthday/wsgi/birthday/images/'
 	STATIC_URL = '/static/'
 	IMAGE_URL= '/images/'
 	
 	
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+	os.path.join(BASE_DIR, 'static'),
 )
 
 
