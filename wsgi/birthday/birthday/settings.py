@@ -23,10 +23,13 @@ BASE_DIR = os.path.dirname(DJ_PROJECT_DIR)
 SECRET_KEY = '!iudke*hi8vo#qyntq5yxm+p2itkuqg-m@bo8o%+cbnq(h%@@-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-TEMPLATE_DEBUG = False
-
+if 'OPENSHIFT_REPO_DIR' in os.environ:
+	DEBUG = False
+	TEMPLATE_DEBUG = False
+else:
+	DEBUG = True
+	TEMPLATE_DEBUG = True
+	
 ALLOWED_HOSTS = ['*']
 
 
@@ -122,6 +125,7 @@ else:
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
+     '/var/www/static/',
 )
 
 
