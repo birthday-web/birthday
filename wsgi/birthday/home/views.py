@@ -117,19 +117,24 @@ def listPosts(request,username):
 	
 def delPost(request,username,post_id):
 	if request.user.is_authenticated():
-		print post_id
-		post=Post.objects.get(pk=post_id)
-		if post.author.user==request.user:
-			path=post.image.url
-			print path
-			os.remove(path)
-			post.delete()
+		try:
+			post=Post.objects.get(pk=post_id)
+			if post.author.user==request.user:
+				path=post.image.url
+				print path
+				os.remove(path)
+				post.delete()
+		except:
+			pass
 	return redirect('/posts/'+username)
 	
 def delComment(request,username,comment_id):
 	if request.user.is_authenticated():
-		comment=Comment.objects.get(pk=comment_id)
-		if comment.author.user == request.user:
-			comment.delete()
+		try:
+			comment=Comment.objects.get(pk=comment_id)
+			if comment.author.user == request.user:
+				comment.delete()
+		except:
+			pass
 	return redirect('/posts/'+username)
 	
