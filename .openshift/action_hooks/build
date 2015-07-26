@@ -5,7 +5,7 @@
 # could be python, php, ruby, etc.
 
 # Activate VirtualEnv in order to use the correct libraries
-echo 'linking images from datadir to wsgi/static/images'
+echo 'linking images from $OPENSHIFT_DATA_DIR/images to $OPENSHIFT_REPO_DIR/wsgi/static/images'
 if [ ! -d $OPENSHIFT_DATA_DIR/images ]; then
 mkdir $OPENSHIFT_DATA_DIR/images
 fi
