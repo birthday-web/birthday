@@ -542,3 +542,15 @@ body{
 		display:none;
 	}
 }
+.delete-post{
+	position:absolute;
+	right:3px;
+	top:-13px;
+	display:block;
+	a{
+		position:relative;
+	}
+}
+.delete-comment{
+	float:right;
+}

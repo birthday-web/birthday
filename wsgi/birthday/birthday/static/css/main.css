@@ -419,4 +419,15 @@ body {
     .close-sidebar {
       display: none; } }
 
+.delete-post {
+  position: absolute;
+  right: 3px;
+  top: -13px;
+  display: block; }
+  .delete-post a {
+    position: relative; }
+
+.delete-comment {
+  float: right; }
+
 /*# sourceMappingURL=main.css.map */

@@ -16,17 +16,28 @@
 			{% for post in posts %}
 				<div class="col-sm-4">
 					<div class="thumbnail">
+						{% if post.author.user == user%}
+						<div class="delete-post" >
+							<a href="delpost/{{post.id}}" title="Delete this post"><i class="fa fa-close"></i></a>
+						</div>
+						{%endif%}
 						<img src="/{{post.image|get_image_url}}"/>
 						<div class="caption">
 							{{post.caption}}
 							<hr>
-							Author - <a href="/posts/{{post.author.user.username}}">{{post.author.user.get_full_name}}</a><hr>
+							Author - <a href="/posts/{{post.author.user.username}}">{{post.author.user.get_full_name}}</a>
+							<hr>
 							{% if post.comment_set %}
 								
 								<div >
 									<ul class="comments">
 									{% for comment in post.comment_set.all %}
 										<li>
+											{% if comment.author.user == user%}
+												<div class="delete-comment" >
+													<a href="delcmt/{{comment.id}}" title="Delete this comment"><i class="fa fa-close"></i></a>
+												</div>
+											{%endif%}
 											<a href="/posts/{{comment.author.user.username}}" ><h6>{{comment.author.user.get_full_name}}</h6></a>
 											<p>{{comment.comment}}</p>
 										</li>

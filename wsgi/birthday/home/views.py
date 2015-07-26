@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from home.models import *
 from home.forms import *
 from django.contrib.auth import authenticate, login, logout
@@ -6,7 +6,14 @@ from nocaptcha_recaptcha.fields import NoReCaptchaField
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 import datetime
+import os
 
+def err_404(request):
+	return render(request,'404.html')
+
+def err_500(request):
+	return render(request,'500.html')	
+	
 def get_by_bday():
 	upc=[]
 	mnt_srt=[]
@@ -16,6 +23,7 @@ def get_by_bday():
 	for x in Friend.objects.all():#order_by('date_of_birth'):
 		mnt_srt[x.date_of_birth.month-1].append(x)
 	curr_mnt=today.month-1
+	last=[]
 	for y in range(12):
 		# insertion sort
 		x=mnt_srt[curr_mnt]
@@ -31,9 +39,16 @@ def get_by_bday():
 				x[i+1]=tmp
 				j+=1
 		upc.extend(x)
+		if curr_mnt==today.month-1:# in first loop only
+			k=0
+			while k<len(upc) and upc[k].date_of_birth.day<today.day:
+				k+=1
+			last=upc[:k]
+			upc=upc[k:]
 		curr_mnt+=1
 		if curr_mnt==12:
 			curr_mnt=0
+	upc.extend(last)
 	return upc
 	
 # Create your views here.
@@ -99,4 +114,22 @@ def listPosts(request,username):
 	else:
 		post_form=PostForm()
 	return render(request,'home/list_posts.html',{'friend':friend,'posts':friend.post_set.all(),'login_form':LoginForm(),'post_form':post_form,'comment_form':CommentForm()})
+	
+def delPost(request,username,post_id):
+	if request.user.is_authenticated():
+		print post_id
+		post=Post.objects.get(pk=post_id)
+		if post.author.user==request.user:
+			path=post.image.url
+			print path
+			os.remove(path)
+			post.delete()
+	return redirect('/posts/'+username)
+	
+def delComment(request,username,comment_id):
+	if request.user.is_authenticated():
+		comment=Comment.objects.get(pk=comment_id)
+		if comment.author.user == request.user:
+			comment.delete()
+	return redirect('/posts/'+username)
 	

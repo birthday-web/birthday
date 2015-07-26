@@ -3,6 +3,8 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
+handler404 = 'home.views.err_404'
+handler500 = 'home.views.err_500'
 urlpatterns = patterns('',
     # Examples:
 	url(r'^',include('home.urls')),
