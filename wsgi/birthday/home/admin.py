@@ -18,8 +18,8 @@ class MyUserAdmin(UserAdmin):
     )
 
 class FriendAdmin(admin.ModelAdmin):
-	list_display = ('user','date_of_birth','image_tag')
-	fields = ['user','date_of_birth','image']
+	list_display = ('user','date_of_birth','quote','image_tag','header_image_tag')
+	fields = ['user','date_of_birth','quote','image','header_image']
 
 class PostAdmin(admin.ModelAdmin):
 	list_display = ('image', 'caption','friend','author')

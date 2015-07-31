@@ -5,23 +5,6 @@ from time import strftime
 from django.conf import settings
 from PIL import Image
 
-def get_friend_image_path(instance,filename):
-	base=settings.IMAGE_ROOT+'friends/'
-	filename=datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f_')+filename
-	return base+filename
-	
-
-def get_post_image_path(instance,filename):
-	base=settings.IMAGE_ROOT+'posts/'
-	filename=datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f_')+filename
-	return base+filename
-
-def get_enroll_image_path(instance,filename):
-	base=settings.IMAGE_ROOT+'enrolls/'
-	filename=datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f_')+filename
-	return base+filename
-	
-
 def resize_image(image):
 	size=(350,350)
 	filename=str(image.path)
@@ -31,24 +14,48 @@ def resize_image(image):
 	
 class Friend(models.Model):
 	user = models.OneToOneField(User)
-	image=models.ImageField(upload_to=get_friend_image_path)
+	image=models.ImageField(upload_to='friends')
 	date_of_birth=models.DateField("Date of Birth")
+	header_image=models.ImageField(upload_to='friends/headers',blank=True)
+	quote=models.CharField(max_length=500)
 	def __str__(self):
 		return self.user.first_name+" "+self.user.last_name+"("+self.user.username+")"
-	def get_img_url(self):
-		tmp=self.image.url.split("/")
-		return '/static/'+"/".join(tmp[-3:])
+	
+	@property
+	def image_url(self):
+		return settings.MEDIA_ROOT + '/'.join(self.image.url.split("/")[-2:])
+	
+	@image_url.setter
+	def image_url(self, value):
+		self.__image_url = value
+	
+	@property
+	def header_image_url(self):
+		if self.header_image:
+			return settings.MEDIA_ROOT + '/'.join(self.header_image.url.split("/")[-3:])
+		else:
+			return ''
+	
+	@header_image_url.setter
+	def header_img_url(self, value):
+		self.__header_image_url = value
+	
 	def image_tag(self):
-		return u'<img src="/%s" width=150 />' % self.get_img_url()
-	image_url=property(get_img_url)
+		return u'<img src="%s" width=150 />' % (self.image_url)
 	image_tag.short_description = 'Image'
 	image_tag.allow_tags = True
+	
+	def header_image_tag(self):
+		return u'<img src="%s" width=150 />' % (self.header_image_url)
+	header_image_tag.short_description = 'Header Image'
+	header_image_tag.allow_tags = True
+	
 	def save(self,*args, **kwargs):
 		super(Friend,self).save()
 		resize_image(self.image)
 	
 class Post(models.Model):
-	image=models.ImageField(upload_to=get_post_image_path)
+	image=models.ImageField(upload_to='posts')
 	caption=models.CharField(max_length=500)
 	friend=models.ForeignKey(Friend)
 	author=models.ForeignKey(Friend, related_name="author")
@@ -57,6 +64,18 @@ class Post(models.Model):
 	def save(self,*args, **kwargs):
 		super(Post,self).save()
 		resize_image(self.image)
+	@property
+	def get_image_url(self):
+		return settings.MEDIA_ROOT + '/'.join(self.image.url.split("/")[-2:])
+	
+	@get_image_url.setter
+	def get_image_url(self, value):
+		self.__get_image_url = value
+	
+	def image_tag(self):
+		return u'<img src="%s" width=150 />' % (self.get_image_url)
+	image_tag.short_description = 'Image'
+	image_tag.allow_tags = True
 
 class Comment(models.Model):
 	comment=models.CharField(max_length=200)
@@ -73,14 +92,19 @@ class UserEnroll(models.Model):
 	username=models.CharField(max_length=50,unique=True)
 	password=models.CharField(max_length=50)
 	date_of_birth=models.DateField("Date of Birth")
-	image=models.ImageField(upload_to=get_enroll_image_path)
+	image=models.ImageField(upload_to='enrolls')
 	def __str__(self):
 		return self.first_name+" "+self.last_name+"("+self.username+")"
-	def get_img_url(self):
-		tmp=self.image.url.split("/")
-		return '/static/'+"/".join(tmp[-3:])
+	@property
+	def get_image_url(self):
+		return settings.MEDIA_ROOT + '/'.join(self.image.url.split("/")[-2:])
+	
+	@get_image_url.setter
+	def get_image_url(self, value):
+		self.__get_image_url = value
+	
 	def image_tag(self):
-		return u'<img src="/%s" width=200/>' % self.get_img_url()
+		return u'<img src="%s" width=150 />' % (self.get_image_url)
 	image_tag.short_description = 'Image'
 	image_tag.allow_tags = True
 	def save(self,*args, **kwargs):

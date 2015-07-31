@@ -2,9 +2,24 @@
 {% load staticfiles %}
 {% load img_url%}
 {% block header%}
-	<div class="header-box">
-		<img src="{%static 'images/core/ballons.png'%}" width="200px">
-		<h1 class="header-heading">Happy Birthday {{friend.user.get_full_name|default:friend.user.username}}</h1>
+	<div class="header" 
+	style="
+    padding-bottom:150px;
+    {%if friend.header_image %}
+		padding-top:400px;
+		background:url('{{friend.header_image_url}}');
+		background-size: cover;
+		background-position:center center;
+		background-repeat: no-repeat;
+		width: 100%;
+	{%else%}
+		padding-top:200px;
+    {%endif%}
+    ">
+		<div class="header-box">
+			<h1 class="header-heading">Happy Birthday {{friend.user.get_full_name|default:friend.user.username}}</h1>
+			<p>{{friend.quote}}</p>
+		</div>
 	</div>
 {%endblock%}
 {%block sections%}
@@ -20,7 +35,7 @@
 							<a href="delpost/{{post.id}}" title="Delete this post"><i class="fa fa-close"></i></a>
 						</div>
 						{%endif%}
-						<img src="{{post.image|get_image_url }}"/>
+						<img src="{{post.get_image_url }}"/>
 						<div class="caption">
 							{{post.caption}}
 							<hr>

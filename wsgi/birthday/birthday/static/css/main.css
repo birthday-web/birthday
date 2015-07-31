@@ -200,7 +200,7 @@ body {
   margin-bottom: 40px;
   background-color: #fff;
   text-shadow: 2px 2px #333;
-  background: url("/static/images/core/pattern.png");
+  background: url("/static/img/pattern.png");
   color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); }
   .header .header-heading {
@@ -398,6 +398,8 @@ body {
     .comments li h6 {
       font-weight: bold;
       text-align: left; }
+    .comments li p {
+      word-break: break-word; }
 
 .header-box {
   text-align: center;

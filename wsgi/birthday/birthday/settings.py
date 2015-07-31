@@ -11,10 +11,13 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
-DJ_PROJECT_DIR = os.path.dirname(__file__)
+DJ_PROJECT_DIR = os.path.realpath(__file__)
 BASE_DIR = os.path.dirname(DJ_PROJECT_DIR)
 
-
+if 'OPENSHIFT_REPO_DIR' in os.environ:
+	DEPLOY=True
+else:
+	DEPLOY=False
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -23,14 +26,18 @@ BASE_DIR = os.path.dirname(DJ_PROJECT_DIR)
 SECRET_KEY = '!iudke*hi8vo#qyntq5yxm+p2itkuqg-m@bo8o%+cbnq(h%@@-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if 'OPENSHIFT_REPO_DIR' in os.environ:
+if DEPLOY:
 	DEBUG = False
-	TEMPLATE_DEBUG = False
 else:
 	DEBUG = True
-	TEMPLATE_DEBUG = False
-	
-ALLOWED_HOSTS = ['*']
+
+TEMPLATE_DEBUG = DEBUG
+
+if DEBUG:
+	ALLOWED_HOSTS = []
+else:
+	ALLOWED_HOSTS = ['*']
+
 
 
 # Application definition
@@ -80,7 +87,7 @@ WSGI_APPLICATION = 'birthday.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
-if 'OPENSHIFT_REPO_DIR' in os.environ:
+if DEPLOY:
 	DB_BASE_DIR=os.environ['OPENSHIFT_DATA_DIR']
 else:
 	DB_BASE_DIR=BASE_DIR
@@ -88,8 +95,7 @@ else:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        # GETTING-STARTED: change 'db.sqlite3' to your sqlite3 database:
-        'NAME': os.path.join(DB_BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(DB_BASE_DIR,'..', 'db.sqlite3'),
     }
 }
 
@@ -98,7 +104,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -109,25 +115,18 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
-
-if 'OPENSHIFT_REPO_DIR' in os.environ:
-    STATIC_ROOT = os.path.join(os.environ.get('OPENSHIFT_REPO_DIR'),'wsgi','static')
-    IMAGE_ROOT = os.path.join(os.environ.get('OPENSHIFT_DATA_DIR'),'images/')
-    STATIC_URL = '/static/'
-    IMAGE_URL= 'static/images/'
-else:
-	STATIC_ROOT = '/var/www/static/'
-	IMAGE_ROOT = '/home/zeeshan/Desktop/Websites/openshift/birthday/wsgi/birthday/images/'
-	STATIC_URL = '/static/'
-	IMAGE_URL= '/images/'
-	
-	
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
+STATIC_ROOT = os.path.join(BASE_DIR, '..','..','static')
+STATIC_URL = '/static/'
 STATICFILES_DIRS = (
 	os.path.join(BASE_DIR, 'static'),
 )
 
+if DEPLOY:
+    MEDIA_ROOT = os.path.join(os.environ.get('OPENSHIFT_DATA_DIR',''),'media')
+    MEDIA_URL= '/media/'
+else:
+	MEDIA_ROOT = '/home/zeeshan/Desktop/Websites/openshift/birthday/wsgi/birthday/media/'
+	MEDIA_URL= '/home/zeeshan/Desktop/Websites/openshift/birthday/wsgi/birthday/media/'
 
 NORECAPTCHA_SITE_KEY = '6Ld_lQkTAAAAAIitG4r-YKH_0I_w5W-Q_WG8KzZV'
 NORECAPTCHA_SECRET_KEY = '6Ld_lQkTAAAAAGr4pBnBzL9ZyDOQvbt2ndYj8Klz'
