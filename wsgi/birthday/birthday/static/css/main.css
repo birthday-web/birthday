@@ -409,6 +409,10 @@ body {
     top: -50px;
     vertical-align: center;
     width: 100%; }
+  .header-box p {
+    font-family: 'Roboto Slab', serif;
+    font-weight: normal;
+    font-size: 25px; }
 
 .close-sidebar {
   color: white;
