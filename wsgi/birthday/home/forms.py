@@ -26,7 +26,7 @@ class UserEnrollForm(forms.ModelForm):
 			'first_name':forms.TextInput(attrs={'class': 'form-control','required':True,'placeholder':'First Name'}),
 			'last_name':forms.TextInput(attrs={'class': 'form-control','required':True,'placeholder':'Last Name'}),
 			'email':forms.TextInput(attrs={'class': 'form-control','required':True,'placeholder':'Email'}),
-			'date_of_birth':forms.DateInput(attrs={'class': 'form-control','type':'date'}),
+			'date_of_birth':forms.DateInput(attrs={'class': 'form-control','type':'date','placeholder':'mm/dd/yyyy'}),
 			'username':forms.TextInput(attrs={'class': 'form-control','required':True,'placeholder':'Username'}),
 			'password':forms.PasswordInput(attrs={'class': 'form-control','Placeholder':'Password'}),
 			'image':forms.FileInput(attrs={'class': 'form-control file-input','type':'file','title':'Your Image'}),
