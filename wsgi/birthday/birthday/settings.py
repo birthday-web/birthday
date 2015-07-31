@@ -23,11 +23,11 @@ else:
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '!iudke*hi8vo#qyntq5yxm+p2itkuqg-m@bo8o%+cbnq(h%@@-'
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if DEPLOY:
-	DEBUG = True
+	DEBUG = False
 else:
 	DEBUG = True
 
@@ -130,4 +130,4 @@ else:
 	MEDIA_URL= '/home/zeeshan/Desktop/Websites/openshift/birthday/wsgi/birthday/media/'
 
 NORECAPTCHA_SITE_KEY = '6Ld_lQkTAAAAAIitG4r-YKH_0I_w5W-Q_WG8KzZV'
-NORECAPTCHA_SECRET_KEY = '6Ld_lQkTAAAAAGr4pBnBzL9ZyDOQvbt2ndYj8Klz'
+NORECAPTCHA_SECRET_KEY = os.environ['RECAPTCHA_SECRET_KEY']
