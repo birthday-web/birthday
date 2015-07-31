@@ -9,10 +9,9 @@
     padding-bottom:150px;
     {%if friend.header_image %}
 		padding-top:400px;
-		background:url('{{friend.header_image_url}}');
+		background:url('{{friend.header_image_url}}') no-repeat center;
 		background-size: cover;
 		background-position:center center;
-		background-repeat: no-repeat;
 		width: 100%;
 	{%else%}
 		padding-top:200px;
