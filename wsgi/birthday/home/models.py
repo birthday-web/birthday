@@ -17,7 +17,7 @@ class Friend(models.Model):
 	image=models.ImageField(upload_to='friends')
 	date_of_birth=models.DateField("Date of Birth")
 	header_image=models.ImageField(upload_to='friends/headers',blank=True)
-	quote=models.CharField(max_length=500)
+	quote=models.CharField(max_length=500,blank=True)
 	def __str__(self):
 		return self.user.first_name+" "+self.user.last_name+"("+self.user.username+")"
 	

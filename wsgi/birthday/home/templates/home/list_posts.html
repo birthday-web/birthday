@@ -23,7 +23,9 @@
     ">
 		<div class="header-box">
 			<h1 class="header-heading">Happy Birthday {{friend.user.get_full_name|default:friend.user.username}}</h1>
+			{% if friend.quote %}
 			<p><i class="fa fa-quote-left fa-1x"></i> {{friend.quote}} <i class="fa fa-quote-right fa-1x"></i></p>
+			{%endif%}
 		</div>
 	</div>
 {%endblock%}
