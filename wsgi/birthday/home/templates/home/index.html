@@ -24,7 +24,11 @@
 			 
 			 <div class="row">
 				{%for friend in primary_friends%}
-					<div class="col-sm-4">
+					{%ifequal primary_friends|length 1 %}
+					<div class="col-sm-4 col-sm-offset-4">
+					{%else%}
+					<div class="col-sm-4 col-sm-offset-1">
+					{%endifequal%}
 						<div class="thumbnail">
 							<img src="{{friend.image_url}}">
 							<div class="caption">
