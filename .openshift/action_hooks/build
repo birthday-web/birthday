@@ -7,7 +7,7 @@
 # Activate VirtualEnv in order to use the correct libraries
 echo 'linking images from $OPENSHIFT_DATA_DIR/images to $OPENSHIFT_REPO_DIR/wsgi/static/images'
 if [ ! -d $OPENSHIFT_DATA_DIR/images ]; then
-mkdir $OPENSHIFT_DATA_DIR/images
+mkdir $OPENSHIFT_DATA_DIR/media
 fi
  
-ln -sf $OPENSHIFT_DATA_DIR/images $OPENSHIFT_REPO_DIR/wsgi/static/images
+ln -sf $OPENSHIFT_DATA_DIR/media $OPENSHIFT_REPO_DIR/wsgi/static/media
