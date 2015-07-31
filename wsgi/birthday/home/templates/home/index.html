@@ -23,8 +23,22 @@
 			 </div>
 			 
 			 <div class="row">
-				{%for friend in friends%}
+				{%for friend in primary_friends%}
 					<div class="col-sm-4">
+						<div class="thumbnail">
+							<img src="{{friend.image_url}}">
+							<div class="caption">
+								<h4 >{{friend.user.get_full_name|default:friend.user.username}}<br><small>{{friend.date_of_birth}}</small></h4>
+								<a class="btn btn-primary" href="posts/{{friend.user.username}}"><i class="fa fa-birthday-cake"></i></a>
+							</div>
+							</img>
+						</div>
+					</div>
+				{%endfor%}
+			 </div>
+			 <div class="row">
+				{%for friend in friends%}
+					<div class="col-sm-2">
 						<div class="thumbnail">
 							<img src="{{friend.image_url}}">
 							<div class="caption">

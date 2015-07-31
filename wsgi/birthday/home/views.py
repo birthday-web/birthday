@@ -86,7 +86,15 @@ def index(request):
 	if not login_form:
 		login_form=LoginForm()
 	friends=get_by_bday()
-	return render(request,'home/index.html',{'sidebar_msg':sidebar_msg,'submit_status':submit_status,'is_index':True,'form':user_enroll_form,'friends':friends,'login_form':login_form})
+	primary_friends=[]
+	for x in friends:
+		if x.date_of_birth.month==datetime.date.today().month and x.date_of_birth.day==datetime.date.today().day:
+			primary_friends.append(x)
+		else:
+			break;
+	for x in primary_friends:
+		friends.remove(x)
+	return render(request,'home/index.html',{'sidebar_msg':sidebar_msg,'submit_status':submit_status,'is_index':True,'form':user_enroll_form,'friends':friends,'primary_friends':primary_friends,'login_form':login_form})
 
 def listPosts(request,username):
 	#user=User.objects.get(username=username)
