@@ -1,6 +1,8 @@
 $font-karla: 'Karla', sans-serif;
+$font-karla: 'Roboto Slab', serif;
 $font-os: 'Open Sans', sans-serif;
 $font-tang: 'Tangerine', cursive;
+$font-quote: 'Roboto Slab', serif;
 
 $font-color: rgba(0, 0, 0, 0.6);
 $font-color-inverse: rgba(255,255,255,0.6);
@@ -534,7 +536,7 @@ body{
 		width:100%;
 	}
 	p{
-		font-family: 'Roboto Slab', serif;
+		font-family: $font-quote;
 		font-weight:normal;
 		font-size:25px;
 	}

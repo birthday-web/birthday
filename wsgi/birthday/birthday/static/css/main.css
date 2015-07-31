@@ -5,7 +5,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Karla", sans-serif;
+  font-family: "Roboto Slab", serif;
   font-weight: 500;
   line-height: 1.1;
   color: inherit;
@@ -410,7 +410,7 @@ body {
     vertical-align: center;
     width: 100%; }
   .header-box p {
-    font-family: 'Roboto Slab', serif;
+    font-family: "Roboto Slab", serif;
     font-weight: normal;
     font-size: 25px; }
 

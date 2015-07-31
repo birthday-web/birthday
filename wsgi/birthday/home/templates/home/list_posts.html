@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block head_block%}
-	<link href='http://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+	
 {% endblock %}
 	
 {% block header%}
@@ -90,7 +90,7 @@
 	{% if user.is_authenticated %}
 	<div class="section">
 		<div class="container">
-		<h2 class="heading section-heading">Create new post for him</h2>
+		<h2 class="heading section-heading">Create new post</h2>
 			<form action="." method="post" enctype="multipart/form-data" class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2">
 				{% csrf_token %}
 				{% for field in post_form.visible_fields%}
