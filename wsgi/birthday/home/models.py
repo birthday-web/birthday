@@ -6,7 +6,7 @@ from django.conf import settings
 from PIL import Image
 
 def resize_image(image):
-	size=(350,350)
+	size=(600,600)
 	filename=str(image.path)
 	new_image = Image.open(filename)
 	new_image.thumbnail(size, Image.ANTIALIAS)
