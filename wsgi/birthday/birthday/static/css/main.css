@@ -399,6 +399,7 @@ body {
       font-weight: bold;
       text-align: left; }
     .comments li p {
+      word-break: break-all;
       word-break: break-word; }
 
 .header-box {
