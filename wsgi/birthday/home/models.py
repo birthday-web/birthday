@@ -23,7 +23,7 @@ class Friend(models.Model):
 	
 	@property
 	def image_url(self):
-		return settings.MEDIA_ROOT + '/'.join(self.image.url.split("/")[-2:])
+		return settings.MEDIA_URL + '/'.join(self.image.url.split("/")[-2:])
 	
 	@image_url.setter
 	def image_url(self, value):
@@ -32,7 +32,7 @@ class Friend(models.Model):
 	@property
 	def header_image_url(self):
 		if self.header_image:
-			return settings.MEDIA_ROOT + '/'.join(self.header_image.url.split("/")[-3:])
+			return settings.MEDIA_URL + '/'.join(self.header_image.url.split("/")[-3:])
 		else:
 			return ''
 	
@@ -66,7 +66,7 @@ class Post(models.Model):
 		resize_image(self.image)
 	@property
 	def get_image_url(self):
-		return settings.MEDIA_ROOT + '/'.join(self.image.url.split("/")[-2:])
+		return settings.MEDIA_URL + '/'.join(self.image.url.split("/")[-2:])
 	
 	@get_image_url.setter
 	def get_image_url(self, value):
@@ -97,7 +97,7 @@ class UserEnroll(models.Model):
 		return self.first_name+" "+self.last_name+"("+self.username+")"
 	@property
 	def get_image_url(self):
-		return settings.MEDIA_ROOT + '/'.join(self.image.url.split("/")[-2:])
+		return settings.MEDIA_URL + '/'.join(self.image.url.split("/")[-2:])
 	
 	@get_image_url.setter
 	def get_image_url(self, value):

@@ -123,7 +123,7 @@ STATICFILES_DIRS = (
 )
 
 if DEPLOY:
-    MEDIA_ROOT = os.path.join(os.environ.get('OPENSHIFT_DATA_DIR',''),'media')
+    MEDIA_ROOT = os.path.join(os.environ.get('OPENSHIFT_DATA_DIR',''),'images')
     MEDIA_URL= '/media/'
 else:
 	MEDIA_ROOT = '/home/zeeshan/Desktop/Websites/openshift/birthday/wsgi/birthday/media/'
