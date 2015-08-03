@@ -121,7 +121,9 @@ def listPosts(request,username):
 			post_form=PostForm()
 	else:
 		post_form=PostForm()
-	return render(request,'home/list_posts.html',{'friend':friend,'posts':friend.post_set.all(),'login_form':LoginForm(),'post_form':post_form,'comment_form':CommentForm()})
+	data={'friend':friend,'posts':friend.post_set.all(),'login_form':LoginForm(),'post_form':post_form,'comment_form':CommentForm(),}
+	data['today']=datetime.date.today()
+	return render(request,'home/list_posts.html',data)
 	
 def delPost(request,username,post_id):
 	if request.user.is_authenticated():

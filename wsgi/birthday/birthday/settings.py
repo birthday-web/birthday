@@ -99,7 +99,7 @@ DATABASES = {
         'NAME': os.path.join(DB_BASE_DIR, 'db.sqlite3'),
     }
 }
-print '-----',(DATABASES['default'])['NAME'],'-----'
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
