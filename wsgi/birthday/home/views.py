@@ -7,6 +7,9 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 import datetime
 import os
+import json
+from django.template.context_processors import csrf
+from django.views.decorators.csrf import csrf_exempt
 
 def err_404(request):
 	return render(request,'404.html')
@@ -52,6 +55,45 @@ def get_by_bday():
 	return upc
 	
 # Create your views here.
+
+def do_logout(request):
+	if request.method=='POST':
+		data={}
+		logout(request)
+		data['success']='successfully sign out'
+		return HttpResponse(json.dumps(data),content_type="application/json")
+	else:
+		return HttpResponseRedirect("/")
+
+def do_login(request):
+	data={}
+	if request.method=='POST':
+		print 'post request',data
+		username=request.POST['username']
+		password=request.POST['password']
+		user=authenticate(username=username, password=password)
+		if user:
+			if user.is_active:
+				login(request,user)
+				print 'active'
+				data['success']='Welcome !!'
+				data['full_name']=user.get_full_name()
+				data['username']=user.username
+				data['email']=user.email
+				data['post_count']=user.friend.post_set.count()
+				data['image_url']=user.friend.image.url
+				data['date_of_birth']=user.friend.date_of_birth.strftime('%d-%B-%Y')
+				print data
+			else:
+				print 'inactive'
+				data['error']='Your account is inavtive contact admin'
+		else:
+			print 'Login Failed'
+			data['error']='Login attemp failed! check username and password'
+		return HttpResponse(json.dumps(data),content_type="application/json")
+	else:
+		return HttpResponseRedirect("/")
+
 def index(request):
 	submit_status=False
 	sidebar_msg=''
@@ -59,6 +101,9 @@ def index(request):
 	login_form=''
 	if request.method=='POST':
 		if 'login_button' in request.POST:
+			print 'login attempt'
+			data['msg']='hello'
+			return HttpResponse(json.dumps(data),content_type="application/json")
 			username=request.POST['username']
 			password=request.POST['password']
 			user=authenticate(username=username, password=password)

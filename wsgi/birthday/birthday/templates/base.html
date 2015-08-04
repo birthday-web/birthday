@@ -28,12 +28,10 @@
 	<div class="sidebar">
 		<a class="close-sidebar js-toggle-sidebar" ><i class="fa fa-close"></i></a>
 		<div class="sidebar-container">
-			{% if sidebar_msg %}
-				<div class="alert alert-info">
-					{{sidebar_msg}}
-				</div>
-			{%endif%}
+			<div id="login-msg"></div>
+			<div id="after-login">
 			{% if user.is_authenticated %}
+			
 				<div class="thumbnail">
 					<img src="{{user.friend.image_url}}">
 				</div>
@@ -44,25 +42,27 @@
 					<strong class="heading">Date of Birth</strong><br>{{user.friend.date_of_birth}}<br>
 					<strong class="heading">Number of Posts</strong><br>{{user.friend.post_set.count}}<br>
 				</p>
-				<form class="sidebar-form" method="post" action="/.">
-					{% csrf_token %}
-					<input name="logout_button" class="btn btn-primary" type="Submit" value="Sign out">
+				<form id="logout-form" class="sidebar-form" method="post">{% csrf_token%}
+					<input id="logout-button" name="logout_button" class="btn btn-primary" type="Submit" value="Sign out">
 				</form>
-			{% else %}
+			{% endif %}
+			</div>
+			<div id="before-login">
+			{% if not user.is_authenticated %}
 				<h4 class="heading">Login </h4>
-				<form action="/." method="post" class="sidebar-form">
-					{% csrf_token %}
+				<form id="login-form" action="/login/" method="post" class="sidebar-form">{% csrf_token%}
 					{%for field in login_form.visible_fields%}
 						<div class="form-group">
 							{{field}}
-							{{field.errors}}
+							<ul id="{{field.name}}_error" class="errorlist"></ul>
 						</div>
 					{%endfor%}
 					<div class="form-group">
-						<input name="login_button" class="btn btn-primary" type="Submit" value="Sign in"/>
+						<input id="login-button" name="login_button" class="btn btn-primary" type="Submit" value="Sign in"/>
 					</div>
 				</form>
 			{% endif %}
+			</div>
 		</div>
 	</div>
 	<div id="wrap" class="wrapper">
@@ -93,7 +93,7 @@
 		
 			{%block header%}{%endblock%}
 		
-		<div class="container">
+		<div id="body" class="container">
 			{%block sections%}{%endblock%}
 		</div>
 			
