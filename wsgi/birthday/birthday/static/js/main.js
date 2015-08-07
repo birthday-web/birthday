@@ -80,10 +80,24 @@ function setLoginMsg(msg,success){
 		});
 		clearTimeout(timer);
 		timer=setTimeout(function(){
-			$('#login-msg').fadeOut(1000,function(){
+			location.reload(true);
+			/*$('#login-msg').fadeOut(500,function(){
+				$(this).css({"visibility":"hidden","display":'block'}).slideUp();
+				
+			});*/
+		},1000);
+		
+	}else{
+		$('#login-msg').html('<div class="alert alert-danger">'+msg+'</div>');
+		$('#login-msg').slideDown("slow",function(){
+			$(this).css({"visibility":"visible","display":'block'}).fadeIn(1000);
+		});
+		clearTimeout(timer);
+		timer=setTimeout(function(){
+			$('#login-msg').fadeOut(500,function(){
 				$(this).css({"visibility":"hidden","display":'block'}).slideUp();
 			});
-		},5000);
+		},2000);
 	}
 }
 function doLogout(){
@@ -133,6 +147,7 @@ function doLogout(){
     		console.log("error logout");
     	}
 });
+	
 }
 function doLogin(){
 	var csrftoken=getCookie('csrftoken');
@@ -191,6 +206,7 @@ function doLogin(){
     		setLoginMsg('Login attempt failed',false);
     	}
 	});
+	
 }
 
 
