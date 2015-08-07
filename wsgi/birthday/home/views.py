@@ -171,25 +171,45 @@ def listPosts(request,username):
 	return render(request,'home/list_posts.html',data)
 	
 def delPost(request,username,post_id):
+	data={}
 	if request.user.is_authenticated():
 		try:
 			post=Post.objects.get(pk=post_id)
 			if post.author.user==request.user:
-				path=post.image.url
-				print path
-				os.remove(path)
-				post.delete()
+				#path=post.image.url
+				#os.remove(path)
+				#post.delete()
+				data['result']=True
+				data['msg']='Item deleted'
+			else:
+				data['result']=False
+				data['msg']='Your are not owner of this item'
 		except:
-			pass
-	return redirect('/posts/'+username)
+			data['result']=False
+			data['msg']='Error occured'
+	else:
+		data['result']=False
+		data['msg']='User not authenticated'
+	return HttpResponse(json.dumps(data),content_type="application/json")
 	
 def delComment(request,username,comment_id):
+	data={}
 	if request.user.is_authenticated():
 		try:
 			comment=Comment.objects.get(pk=comment_id)
 			if comment.author.user == request.user:
-				comment.delete()
-		except:
-			pass
-	return redirect('/posts/'+username)
+				#comment.delete()
+				data['result']=True
+				data['msg']='Item deleted'
+			else:
+				data['result']=False
+				data['msg']='Your are not owner of this item'
+		except Exception as e:
+			data['result']=False
+			data['msg']='Error occured'
+			data['err']=e
+	else:
+		data['result']=False
+		data['msg']='User not authenticated'
+	return HttpResponse(json.dumps(data),content_type="application/json")
 	

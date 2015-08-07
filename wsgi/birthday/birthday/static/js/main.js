@@ -56,10 +56,14 @@ function csrfSafeMethod(method) {
 register_div=$('#get_listed');
 
 function remove_register_div(){
-	register_div.fadeOut(1000);
+	register_div.fadeOut(1000,function(){
+		$(this).css({"visibility":"hidden","display":'block'}).slideUp();
+	});
 }
 function add_register_div(){
-	register_div.fadeIn(1000);
+	register_div.slideDown("slow",function(){
+		$(this).css({"visibility":"visible","display":'block'}).fadeIn(1000);
+	});
 }
 function updateCsrf(){
 	var csrftoken=getCookie('csrftoken');
@@ -67,14 +71,19 @@ function updateCsrf(){
 		$(this).val(csrftoken);
 	});
 }
+timer="";
 function setLoginMsg(msg,success){
 	if(success){
-		$('#login-msg').hide();
 		$('#login-msg').html('<div class="alert alert-success">'+msg+'</div>');
-		$('#login-msg').fadeIn(1000);
-		setTimeout(function(){
-			$('#login-msg').fadeOut(1000);
-		},5000)
+		$('#login-msg').slideDown("slow",function(){
+			$(this).css({"visibility":"visible","display":'block'}).fadeIn(1000);
+		});
+		clearTimeout(timer);
+		timer=setTimeout(function(){
+			$('#login-msg').fadeOut(1000,function(){
+				$(this).css({"visibility":"hidden","display":'block'}).slideUp();
+			});
+		},5000);
 	}
 }
 function doLogout(){

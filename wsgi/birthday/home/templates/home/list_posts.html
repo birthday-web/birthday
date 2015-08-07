@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {%block js_include%}
-	
+	<script src="{% static 'home/js/home_main.js' %}"></script>
 {%endblock%}
 
 {% block header%}
@@ -34,13 +34,13 @@
 		<div class="container">
 			<h2 class="heading section-heading">Posts for {{friend.user.get_full_name|default:friend.user.username}}</h2>
 			
-			<div class="row">
+			
 			{% for post in posts %}
 				<div class="col-sm-4">
 					<div class="thumbnail">
 						{% if post.author.user == user%}
-						<div class="delete-post" >
-							<a href="delpost/{{post.id}}" title="Delete this post"><i class="fa fa-close"></i></a>
+						<div class="delete delete-post" >
+							<a name="post" data-pk="{{post.pk}}" href="delpost/{{post.id}}" title="Delete this post"><i class="fa fa-close"></i></a>
 						</div>
 						{%endif%}
 						<img src="{{post.get_image_url }}"/>
@@ -50,14 +50,13 @@
 							Author - <a href="/posts/{{post.author.user.username}}">{{post.author.user.get_full_name}}</a>
 							<hr>
 							{% if post.comment_set %}
-								
 								<div >
 									<ul class="comments">
 									{% for comment in post.comment_set.all %}
 										<li>
 											{% if comment.author.user == user%}
-												<div class="delete-comment" >
-													<a href="delcmt/{{comment.id}}" title="Delete this comment"><i class="fa fa-close"></i></a>
+												<div class="delete delete-comment" >
+													<a name="cmt" data-pk="{{comment.pk}}" href="delcmt/{{comment.id}}" title="Delete this comment"><i class="fa fa-close"></i></a>
 												</div>
 											{%endif%}
 											<a href="/posts/{{comment.author.user.username}}" ><h6>{{comment.author.user.get_full_name}}</h6></a>
@@ -87,12 +86,9 @@
 						</div>
 					</div>
 				</div>
-			{% if forloop.counter|divisibleby:'3' %}
-				</div>
-				<div class="row">
-			{%endif%}
+			
 			{% endfor %}
-			</div>
+			
 		</div>
 	</div>
 	{% if user.is_authenticated %}
