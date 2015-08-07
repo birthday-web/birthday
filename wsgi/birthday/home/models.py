@@ -5,6 +5,15 @@ from time import strftime
 from django.conf import settings
 from PIL import Image
 
+FRIENDSHIP_FRIEND = 1
+FRIENDSHIP_BLOCKED = 2
+FRIENDSHIP_REQUESTED = 3
+FRIENDSHIP_STATUSES = (
+    (FRIENDSHIP_FRIEND, 'Friend'),
+    (FRIENDSHIP_BLOCKED, 'Blocked'),
+    (FRIENDSHIP_REQUESTED, 'Requested'),
+)
+
 def resize_image(image):
 	size=(600,600)
 	filename=str(image.path)
@@ -12,15 +21,41 @@ def resize_image(image):
 	new_image.thumbnail(size, Image.ANTIALIAS)
 	new_image.save(filename)
 	
+
 class Friend(models.Model):
 	user = models.OneToOneField(User)
 	image=models.ImageField(upload_to='friends')
 	date_of_birth=models.DateField("Date of Birth")
 	header_image=models.ImageField(upload_to='friends/headers',blank=True)
 	quote=models.CharField(max_length=500,blank=True)
+	friends=models.ManyToManyField('self',through="Friendship",symmetrical=False,related_name="friend_with+")
+	
+	def add_relationship(self,friend,status,symm=True):
+		friendship,created=Friendship.objects.get_or_create(from_person=self,to_person=friend,status=status)
+		if symm:
+			friend.add_friendship(self,status,False)
+		return friendship
+		
+	def remove_relationship(self,friend,status,symm=True):
+		Friendship.objects.filter(from_person=self,to_person=friend,status=status).delete()
+		if symm:
+			friend.remove_friendship(self,status,False)
+		return
+	
+	def get_friendships(self,status=FRIENDSHIP_FRIEND):
+		return self.friends.filter(to_friend__status=status, to_friend__from_person=self)
+		
 	def __str__(self):
 		return self.user.first_name+" "+self.user.last_name+"("+self.user.username+")"
 	
+	@property
+	def friend_requests(self):
+		return Friendship.objects.filter(status=FRIENDSHIP_REQUESTED, to_person=self)
+
+	@friend_requests.setter
+	def friend_requests(self, value):
+		self.__friend_requests = value
+		
 	@property
 	def image_url(self):
 		return settings.MEDIA_URL + '/'.join(self.image.url.split("/")[-2:])
@@ -53,7 +88,16 @@ class Friend(models.Model):
 	def save(self,*args, **kwargs):
 		super(Friend,self).save()
 		resize_image(self.image)
-	
+
+class Friendship(models.Model):
+	from_person=models.ForeignKey(Friend,related_name="from_friend")
+	to_person=models.ForeignKey(Friend,related_name="to_friend")
+	status=models.IntegerField(choices=FRIENDSHIP_STATUSES)
+	def __str__(self):
+		res=self.from_person.user.username+"<->"+self.to_person.user.username+" - "+str(self.status)
+		return res
+
+
 class Post(models.Model):
 	image=models.ImageField(upload_to='posts')
 	caption=models.CharField(max_length=500)

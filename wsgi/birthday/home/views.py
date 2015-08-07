@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from home.models import *
 from home.forms import *
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from nocaptcha_recaptcha.fields import NoReCaptchaField
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
@@ -10,6 +11,7 @@ import os
 import json
 from django.template.context_processors import csrf
 from django.views.decorators.csrf import csrf_exempt
+import traceback
 
 def err_404(request):
 	return render(request,'404.html')
@@ -17,13 +19,14 @@ def err_404(request):
 def err_500(request):
 	return render(request,'500.html')	
 	
-def get_by_bday():
+def get_by_bday(request):
+	friends=request.user.friend.friends.filter(to_friend__status=FRIENDSHIP_FRIEND)
 	upc=[]
 	mnt_srt=[]
 	for x in range(12):
 		mnt_srt.append([])
 	today=datetime.date.today()
-	for x in Friend.objects.all():#order_by('date_of_birth'):
+	for x in friends:
 		mnt_srt[x.date_of_birth.month-1].append(x)
 	curr_mnt=today.month-1
 	last=[]
@@ -94,11 +97,51 @@ def do_login(request):
 	else:
 		return HttpResponseRedirect("/")
 
+def add_friend_request(request):
+	if request.user.is_authenticated() and request.method=="POST":
+		data={}
+		form=AddFriendForm(request.POST)
+		if form.is_valid():
+			email=form.cleaned_data['email']
+			try:
+				friend=User.objects.get(email=email).friend
+				#already requested ?
+				if friend != request.user.friend:
+					if friend not in request.user.friend.friends.all():
+						request.user.friend.add_relationship(friend,FRIENDSHIP_REQUESTED,False)
+						data['result']=True
+						data['msg']="Request has been created, waiting for approval from your friend"
+					else:
+						data['result']=False
+						data['error']='You already have this friend or requested'
+				else:
+					data['result']=False
+					data['error']='You cannot be friend with yourself'
+			except Exception as ex:
+				traceback.print_exc()
+				data['result']=False
+				data['error']='User not registered'
+		else:
+			print 'not valid'
+			data['result']=False
+			data['errors']=form.errors
+		return HttpResponse(json.dumps(data),content_type="application/json")
+	else:
+		return HttpResponseRedirect("/")
+	
+def index_login(request):
+	data={}
+	data['form']=UserEnrollForm()
+	data['login_form']=LoginForm()
+	return render(request,"home/login.html",data)
+	
 def index(request):
 	submit_status=False
 	sidebar_msg=''
 	user_enroll_form=''
 	login_form=''
+	if not request.user.is_authenticated():
+		return index_login(request)
 	if request.method=='POST':
 		if 'login_button' in request.POST:
 			print 'login attempt'
@@ -130,7 +173,7 @@ def index(request):
 		user_enroll_form=UserEnrollForm()
 	if not login_form:
 		login_form=LoginForm()
-	friends=get_by_bday()
+	friends=get_by_bday(request)
 	primary_friends=[]
 	for x in friends:
 		if x.date_of_birth.month==datetime.date.today().month and x.date_of_birth.day==datetime.date.today().day:
@@ -139,36 +182,52 @@ def index(request):
 			break;
 	for x in primary_friends:
 		friends.remove(x)
-	return render(request,'home/index.html',{'sidebar_msg':sidebar_msg,'submit_status':submit_status,'is_index':True,'form':user_enroll_form,'friends':friends,'primary_friends':primary_friends,'login_form':login_form})
+	data={
+		'add_friend_form':AddFriendForm(), 'sidebar_msg':sidebar_msg,
+		'submit_status':submit_status, 'is_index':True, 'form':user_enroll_form,
+		'friends':friends, 'primary_friends':primary_friends, 'login_form':login_form
+		}
+	return render(request,'home/index.html',data)
 
 def listPosts(request,username):
-	#user=User.objects.get(username=username)
 	friend=Friend.objects.get(user=User.objects.get(username=username))
-	if request.method=='POST':
-		author=Friend.objects.get(user=request.user)
-		if 'post_button' in request.POST and request.user.is_authenticated():
-			post_form=PostForm(request.POST,request.FILES)
-			if post_form.is_valid():
-				post=post_form.save(commit=False)
-				post.author=author
-				post.friend=friend
-				post.save()
+	'''
+	checks required
+	1. user is authenticated
+	2. friend is a in friend list of user
+	'''
+	#check number 1 and 2
+	if request.user.is_authenticated() and friend in request.user.friend.get_friendships():
+		if request.method=='POST':
+		#POST request
+			author=request.user.friend
+			if 'post_button' in request.POST:
+				post_form=PostForm(request.POST,request.FILES)
+				if post_form.is_valid():
+					post=post_form.save(commit=False)
+					post.author=author
+					post.friend=friend
+					post.save()
+					post_form=PostForm()
+			elif 'comment_button' in request.POST:
+				comment_form=CommentForm(request.POST)
+				if comment_form.is_valid():
+					print 'comment valid'
+					comment=comment_form.save(commit=False)
+					comment.author=author
+					comment.save()
+				else:
+					print 'comment invalid'
 				post_form=PostForm()
-		elif 'comment_button' in request.POST and request.user.is_authenticated():
-			comment_form=CommentForm(request.POST)
-			if comment_form.is_valid():
-				print 'comment valid'
-				comment=comment_form.save(commit=False)
-				comment.author=author
-				comment.save()
-			else:
-				print 'comment invalid'
+			
+		else:
+			#GET request
 			post_form=PostForm()
+		data={'friend':friend,'posts':friend.post_set.all(),'post_form':post_form,'comment_form':CommentForm(),}
+		return render(request,'home/list_posts.html',data)
 	else:
-		post_form=PostForm()
-	data={'friend':friend,'posts':friend.post_set.all(),'login_form':LoginForm(),'post_form':post_form,'comment_form':CommentForm(),}
-	data['today']=datetime.date.today()
-	return render(request,'home/list_posts.html',data)
+	#User not authenticated
+		return HttpResponseRedirect("/")
 	
 def delPost(request,username,post_id):
 	data={}
@@ -213,3 +272,7 @@ def delComment(request,username,comment_id):
 		data['msg']='User not authenticated'
 	return HttpResponse(json.dumps(data),content_type="application/json")
 	
+def acceptRequest(request):
+	pass
+def rejectRequest(request):
+	pass

@@ -17,9 +17,14 @@ class MyUserAdmin(UserAdmin):
         ),
     )
 
+class FriendshipInline(admin.StackedInline):
+	model=Friendship
+	fk_name='from_person'
+	
 class FriendAdmin(admin.ModelAdmin):
 	list_display = ('user','date_of_birth','quote','image_tag','header_image_tag')
 	fields = ['user','date_of_birth','quote','image','header_image']
+	inlines=[FriendshipInline]
 
 class PostAdmin(admin.ModelAdmin):
 	list_display = ('image', 'caption','friend','author')
@@ -33,9 +38,9 @@ class UserEnrollAdmin(admin.ModelAdmin):
 	list_display=('first_name','last_name','email','username','password','date_of_birth','image_tag',)
 	fields = ['first_name','last_name','email','username','password','date_of_birth','image']
 
-
 admin.site.register(User, MyUserAdmin)
 admin.site.register(Friend,FriendAdmin)
 admin.site.register(Post,PostAdmin)
 admin.site.register(Comment,CommentAdmin)
 admin.site.register(UserEnroll,UserEnrollAdmin)
+

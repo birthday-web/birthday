@@ -28,7 +28,7 @@
 	<div class="sidebar">
 		<a class="close-sidebar js-toggle-sidebar" ><i class="fa fa-close"></i></a>
 		<div class="sidebar-container">
-			<div id="login-msg"></div>
+			<div id="login-msg" style="visibility:hidden;display:none;"></div>
 			<div id="after-login">
 			{% if user.is_authenticated %}
 			
@@ -43,7 +43,7 @@
 					<strong class="heading">Number of Posts</strong><br>{{user.friend.post_set.count}}<br>
 				</p>
 				<form id="logout-form" class="sidebar-form" method="post">{% csrf_token%}
-					<input id="logout-button" name="logout_button" class="btn btn-primary" type="Submit" value="Sign out">
+					<button id="logout-button" name="logout_button" class="btn btn-primary" type="Submit">Signout</button>
 				</form>
 			{% endif %}
 			</div>
@@ -58,7 +58,7 @@
 						</div>
 					{%endfor%}
 					<div class="form-group">
-						<input id="login-button" name="login_button" class="btn btn-primary" type="Submit" value="Sign in"/>
+						<button id="login-button" name="login_button" class="btn btn-primary" type="Submit" >Signin</button>
 					</div>
 				</form>
 			{% endif %}
@@ -78,7 +78,7 @@
 				<div id="navbar" class="navbar-collapse collapse navbar-right">
 					<ul class="nav navbar-nav">
 						<li><a id='#friends' href="{% if is_index %}#friends{% else %}/#friends{%endif%}">Friends</a></li>
-						<li><a id='#get_listed' href="{% if is_index %}#get_listed{% else %}/#get_listed{%endif%}">Get Listed</a></li>
+						<li><a id='#about' href="{% if is_index %}#about{% else %}/#about{%endif%}">About</a></li>
 						<li><span class="btn-separator"></span></li>
 						<li><a class="js-toggle-sidebar" id='#login'>
 								<span class="fa fa-bars"></span>

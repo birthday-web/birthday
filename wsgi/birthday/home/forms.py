@@ -19,9 +19,10 @@ class LoginForm(forms.ModelForm):
 		
 class UserEnrollForm(forms.ModelForm):
 	captcha=NoReCaptchaField(error_messages={'required':'This check is mandatory.'})
+	reference_email=forms.EmailField(widget=forms.TextInput(attrs={'class':'form-control','required':True,'placeholder':'Email of your registered friend'}))
 	class Meta:
 		model= UserEnroll
-		fields=['first_name','last_name','email','date_of_birth','username','password','image','captcha']
+		fields=['first_name','last_name','email','date_of_birth','username','password','image','reference_email','captcha']
 		widgets={
 			'first_name':forms.TextInput(attrs={'class': 'form-control','required':True,'placeholder':'First Name'}),
 			'last_name':forms.TextInput(attrs={'class': 'form-control','required':True,'placeholder':'Last Name'}),
@@ -54,6 +55,9 @@ class PostForm(forms.ModelForm):
 			'caption':forms.Textarea(attrs={'class': 'form-control','required':True,'placeholder':'Caption'}),
 			}
 			
+class AddFriendForm(forms.Form):
+	email=forms.EmailField(widget=forms.TextInput(attrs={'class':'form-control','required':True,'placeholder':'Your friend\'s email'}))
+
 class CommentForm(forms.ModelForm):
 	class Meta:
 		model=Comment

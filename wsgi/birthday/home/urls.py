@@ -11,4 +11,7 @@ urlpatterns = [
 	url(r'^posts/(?P<username>[-\w.]+)/$', views.listPosts),
 	url(r'^posts/(?P<username>[-\w.]+)/delcmt/(?P<comment_id>\d+)/$', views.delComment),
 	url(r'^posts/(?P<username>[-\w.]+)/delpost/(?P<post_id>\d+)/$', views.delPost),
+	url(r'^add_friend_request/$', views.add_friend_request),
+	url(r'^request_accept/(?P<request_pk>\d+)/$', views.acceptRequest),
+	url(r'^request_reject/(?P<request_pk>\d+)/$', views.rejectRequest),
 ]

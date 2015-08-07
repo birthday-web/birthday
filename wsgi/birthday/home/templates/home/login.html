@@ -1,13 +1,71 @@
-{%extends 'base.html'%}
+{% extends 'base.html' %}
 
-{% block body_block%}
-	<form id="login_form" method="post" action=".">
-            {% csrf_token %}
-            Username: <input type="text" name="username" value="" size="50" />
-            <br />
-            Password: <input type="password" name="password" value="" size="50" />
-            <br />
+{% load staticfiles %}
 
-            <input type="submit" value="submit" />
-        </form>
+{%block header%}
+<div class="header">
+	<h1 class="header-heading">Hi! Guys</h1>
+	<p>You dont't get older, you get better.</p>
+</div>
+{%endblock%}
+
+{%block js_include%}
+	<script src='https://www.google.com/recaptcha/api.js'></script>
+{%endblock%}
+
+{%block sections%}
+	<div id="friends" class="section">
+		<div class="container">
+			<div class="row">
+				<h2 class="heading section-heading">Login</h2>
+				<div class="col-sm-6 col-sm-offset-3" id="login-msg-main" style="visibility:hidden;display:none;"></div>
+				<form id="login-form-main" action="/login/" method="post" >{% csrf_token%}
+					{%for field in login_form.visible_fields%}
+						<div class="form-group col-sm-6 col-sm-offset-3">
+							<label>{{field.label}}</label>
+							{{field}}
+							<ul id="{{field.name}}_error" class="errorlist"></ul>
+						</div>
+					{%endfor%}
+					<div class="form-group col-sm-4 col-sm-offset-4">
+						<button id="login-button-main" name="login_button" class="btn btn-primary" type="Submit">Signin</button>
+						<input type="reset" value="Reset" class="btn btn-default"/>
+					</div>
+				</form>
+			 </div>
+		</div>
+	</div>
+	<div id="get_listed" class="section" style="{% if user.is_authenticated %}display:none;{%endif%}">
+		<div class="container">
+			<h2 class="heading section-heading">Register</h2>							
+			<p><span class="label label-danger">Note</span> You must have email of a friend who is already registered with us.</p>
+		</div>
+		<div class="container">
+			<div class="row">
+				{% if submit_status %}
+					<div class="alert alert-success center" role="alert">
+						Thank you, your request has been registered.
+					</div>
+				{%endif%}
+				<form enctype="multipart/form-data" method="post" action="." class="form">
+				{% csrf_token%}
+					{% for field in form.visible_fields%}
+						
+						<div class="form-group col-sm-6">
+							<label>{{field.label}}</label>
+							{{field}}
+							{% if field.errors%}
+								<ul class="errorlist">
+								{% for error in field.errors %}
+									<li><i class="fa fa-asterisk"></i> {{error}}</li>
+								{%endfor%}
+								</ul>
+							{%endif%}
+						</div>
+					{%endfor%}
+					<button class=" col-xs-4 col-md-2 col-md-offset-5 col-xs-offset-4 btn btn-primary" type="submit" name="request_button">Submit Request</button>
+				</form>			
+			</div>
+		</div>
+	</div>
 {%endblock%}

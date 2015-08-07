@@ -4,22 +4,19 @@
 
 {%block header%}
 <div class="header">
-	<h1 class="header-heading">Hi! Guys</h1>
-	<p>You dont't get older, you get better.</p>
+	<h1 class="header-heading">Hello! {{request.user.get_full_name|default:request.user.username}}</h1>
 </div>
 {%endblock%}
 
 {%block js_include%}
 	<script src='https://www.google.com/recaptcha/api.js'></script>
-	
-	
 {%endblock%}
 
 {%block sections%}
 	<div id="friends" class="section">
 		<div class="container">
 			<div class="row">
-				<h2 class="heading section-heading"></h2>						
+				<h2 class="heading section-heading">Your Friends</h2>						
 			 </div>
 			 
 			 <div class="row">
@@ -54,45 +51,46 @@
 					</div>
 				{%endfor%}
 			 </div>
-			 <p>this is the list of friends registed.
-				 If you want your name out of the list mail me at
-				  <a href="mailto:zkhan1093@gmail.com?Subject=Remove Me From Birthday List&Body=Remove my name from birthday list thank you" target="_top">zkhan1093@gmail.com</a></p>
 		</div>
 	</div>
-	
-	<div id="get_listed" class="section" style="{% if user.is_authenticated %}display:none;{%endif%}">
-		<div class="container">
-			<h2 class="heading section-heading">Get Listed</h2>							
-			
-		</div>
+	<!-- New Friend Requests List-->
+	{%if request.user.friend.friend_requests|length > 0 %}
+	<div class="section">
 		<div class="container">
 			<div class="row">
-				{% if submit_status %}
-					<div class="alert alert-success center" role="alert">
-						Thank you, your request has been registered.
-					</div>
-				{%else%}
-					<p>To see yourself in the list above fill out this form</p>
-				{%endif%}
-				<form enctype="multipart/form-data" method="post" action="." class="form">
-				{% csrf_token%}
-					{% for field in form.visible_fields%}
-						
-						<div class="form-group col-sm-6">
-							<label>{{field.label}}</label>
-							{{field}}
-							{% if field.errors%}
-								<ul class="errorlist">
-								{% for error in field.errors %}
-									<li><i class="fa fa-asterisk"></i> {{error}}</li>
-								{%endfor%}
-								</ul>
-							{%endif%}
-						</div>
-					{%endfor%}
-					<button class=" col-xs-4 col-md-2 col-md-offset-5 col-xs-offset-4 btn btn-primary" type="submit" name="request_button">Submit Request</button>
-				</form>			
-			</div>
+				<h2 class="heading section-heading">Do You Know Them ?</h2>						
+			 </div>
+			 <ul class="friend-requests">
+			 	{%for fr in request.user.friend.friend_requests%}
+			 		<li>
+			 			<i class="fa fa-user"></i> {{fr.from_person.user.get_full_name}} - {{fr.from_person.user.email}} <a href="request_accept/{{fr.pk}}"><i class="fa fa-check"></i></a> <a href="request_reject/{{fr.pk}}"><i class="fa fa-close"></i></a>
+			 		</li>
+			 	{%endfor%}
+			 </ul>
+		</div>
+	</div>
+	{%endif%}
+	<!-- Add new Friend form-->
+		<div class="section">
+		<div class="container">
+			<div class="row">
+				<h2 class="heading section-heading">Add new Friend</h2>						
+			 </div>
+
+			 <div id="add-friend-msg" class="col-sm-6 col-sm-offset-3" style="visibility:hidden; display:none;"></div>
+
+			 <form id="add-friend-form" method="post">
+			 	{%csrf_token%}
+			 	{%for field in add_friend_form.visible_fields%}
+			 		<div class="form-group col-sm-6 col-sm-offset-3">
+			 			<label>{{field.label}}</label>
+			 			{{field}}
+			 		</div>
+			 	{%endfor%}
+			 	<div class="form-group col-sm-6 col-sm-offset-3">
+			 		<button id="add-friend-submit-button" class="btn btn-primary" type="submit">Send Request</button>
+			 	</div>
+			 </form>
 		</div>
 	</div>
 {%endblock%}

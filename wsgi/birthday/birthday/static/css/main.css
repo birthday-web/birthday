@@ -384,7 +384,7 @@ body {
     background-color: rgba(0, 0, 0, 0.2);
     border: 0;
     box-shadow: rgba(255, 255, 255, 0.3) 0px 0px 1px; }
-  .sidebar-form input[type=submit] {
+  .sidebar-form button[type=submit] {
     font-size: 11px;
     width: 100%;
     padding: 10px; }
@@ -414,7 +414,7 @@ body {
     font-family: "Roboto Slab", serif;
     font-weight: normal;
     font-size: 25px; }
-    
+
 .close-sidebar {
   color: white;
   display: block;
@@ -436,4 +436,8 @@ body {
 
 .delete-comment {
   float: right; }
+
+.friend-requests {
+  list-style: none; }
+
 /*# sourceMappingURL=main.css.map */
