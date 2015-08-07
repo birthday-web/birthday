@@ -1,3 +1,23 @@
+function confirm(name,pk){
+	$(".confirm-box .yes").on("click",function(event){
+		event.preventDefault();
+		deleteItem(name,pk)
+		$(".confirm-box .content").fadeOut("slow",function(){
+			$(".confirm-box ").hide();	
+		});	
+	});
+	$(".confirm-box .no").on("click",function(event){
+		event.preventDefault();
+		$(".confirm-box .content").fadeOut("slow",function(){
+			$(".confirm-box ").hide();
+		});
+	});
+	$(".confirm-box ").show(0,function(){
+		$(".confirm-box .content").fadeIn("slow");
+	});
+	
+}
+
 function removeItem(name,pk){
 	console.log("removing "+name+" "+pk);
 	if(name==="post"){
@@ -6,8 +26,10 @@ function removeItem(name,pk){
 		});
 	}
 	else if(name==="cmt"){
-		$("[name="+name+"][data-pk="+pk+"]").parent().parent().hide("slow",function(){
+		$("[name="+name+"][data-pk="+pk+"]").parent().parent().fadeOut("slow",function(){
+			$(this).css({"visibility":"hidden","display":"block"}).slideUp("slow",function(){
 			$(this).remove();
+			});
 		});
 	}
 }
@@ -36,11 +58,9 @@ function deleteItem(name,pk){
 		});
 	}
 }
-
 $(".delete a").each(function(i,item){
 	$(this).on("click",function(event){
 		event.preventDefault();
-		$name=$(this).prop("name");
-		deleteItem($name,$(this).data("pk"));
+		confirm($(this).prop("name"),$(this).data("pk"));
 	})
 });

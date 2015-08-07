@@ -5,6 +5,10 @@
 	<script src="{% static 'home/js/home_main.js' %}"></script>
 {%endblock%}
 
+{% block head_block%}
+	<link href="{% static 'home/css/home_main.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
 {% block header%}
 
 	<div class="header" 
@@ -30,6 +34,12 @@
 	</div>
 {%endblock%}
 {%block sections%}
+	<div class="confirm-box">
+		<div class="content">
+			<p>Confirm delete ?</p>
+			<a class="yes btn btn-primary">Yes</a> <a  class="no btn btn-default">No</a>
+		</div>
+	</div>
 	<div class="section">
 		<div class="container">
 			<h2 class="heading section-heading">Posts for {{friend.user.get_full_name|default:friend.user.username}}</h2>
