@@ -36,13 +36,13 @@ function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
-
+//not used
 function remove_register_div(){
 	register_div.fadeOut(1000,function(){
 		$(this).css({"visibility":"hidden","display":'block'}).slideUp();
 	});
 }
-
+//not used
 function add_register_div(){
 	register_div.slideDown("slow",function(){
 		$(this).css({"visibility":"visible","display":'block'}).fadeIn(1000);
@@ -152,7 +152,7 @@ function doLogout(){
     				$('#before-login').fadeIn(500);
     			});
        		}
-    		add_register_div();
+
     		updateCsrf();
     		setLogin();
     	},
@@ -221,8 +221,6 @@ function doLogin(main){
     				$('#after-login').fadeIn(500);
     			});
     			setLogout();
-    			remove_register_div();
-    			
     		}
     		else{
     			setNotification(json['error'],false);
@@ -269,7 +267,7 @@ function AddFriend(){
 		data:form.serialize(),
 		type:"POST",
 		success:function(json){
-			if(json['result']){
+			if(json['status']){
 				setNotification(json['msg'],false);
 			}
 			else{

@@ -112,24 +112,23 @@ def add_friend_request(request):
 					
 					if friend not in request.user.friend.friends.all():
 						request.user.friend.add_relationship(friend,FRIENDSHIP_REQUESTED,False)
-						data['result']=True
+						data['status']=True
 						data['msg']="Request has been created, waiting for approval from your friend"
 					else:
-						data['result']=False
+						data['status']=False
 						if friend in request.user.friend.get_friendships(FRIENDSHIP_BLOCKED):
 							data['error']='Your friend has blocked you !!'
 						else:
 							data['error']='You already have this friend or requested for friendship'
 				else:
-					data['result']=False
+					data['status']=False
 					data['error']='You cannot be friend with yourself'
-			except Exception as ex:
-				traceback.print_exc()
-				data['result']=False
+			except ObjectDoesNotExist:
+				data['status']=False
 				data['error']='Your friend is not registered with us'
 		else:
 			print 'not valid'
-			data['result']=False
+			data['status']=False
 			data['error']="Invalid email address"
 		return HttpResponse(json.dumps(data),content_type="application/json")
 	else:
