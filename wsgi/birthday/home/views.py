@@ -136,128 +136,77 @@ def add_friend_request(request):
 		return HttpResponseRedirect("/")
 	
 def register(request):
-	print "registration request"
-	data={}
-	user_enroll_form=UserEnrollForm(request.POST,request.FILES);
-	if user_enroll_form.is_valid():
-		#create a inactive user and send request
-		user_enroll=user_enroll_form.save()
-		try:
-			reference=User.objects.get(email=user_enroll.reference_email)
-		except:
-			reference=False
-		if reference and reference.is_active:
-			print 'reference ok'
-			user=User(username=user_enroll.username,password=user_enroll.password,email=user_enroll.email)
-			user.first_name=user_enroll.first_name
-			user.last_name=user_enroll.last_name
-			user.is_active=False
-			user.save()
-			print user
-			user_friend=Friend()
-			user_friend.user=user
-			user_friend.date_of_birth=user_enroll.date_of_birth
-			user_friend.image=user_enroll.image
-			user_friend.save()
-			print user_friend
-			user_friend.add_relationship(reference.friend,FRIENDSHIP_REQUESTED,false)
-			data['status']=True
-			data['msg']='Congratulations!! you are now registered'
+	if request.method=='POST':
+		print "registration request"
+		data={}
+		user_enroll_form=UserEnrollForm(request.POST,request.FILES);
+		if user_enroll_form.is_valid():
+			#create a inactive user and send request
+			user_enroll=user_enroll_form.save()
+			try:
+				reference=User.objects.get(email=user_enroll.reference_email)
+			except:
+				reference=False
+			if reference and reference.is_active:
+				print 'reference ok'
+				user=User(username=user_enroll.username,email=user_enroll.email)
+				user.set_password(user_enroll.password)
+				user.first_name=user_enroll.first_name
+				user.last_name=user_enroll.last_name
+				user.is_active=False
+				user.save()
+				print user
+				user_friend=Friend()
+				user_friend.user=user
+				user_friend.date_of_birth=user_enroll.date_of_birth
+				user_friend.image=user_enroll.image
+				user_friend.save()
+				print user_friend
+				user_friend.add_relationship(reference.friend,FRIENDSHIP_REQUESTED,False)
+				data['status']=True
+				data['msg']='Congratulations!! you are now registered'
+			else:
+				data['status']=False
+				data['error']='invalid reference'
 		else:
 			data['status']=False
-			data['error']='invalid reference'
-	return data
+			data['error']='Correct errors in form and retry !!'
+			data['errors']=user_enroll_form.errors
+	else:
+		data['status']=False
+		data['error']='Invalid request'
+	return HttpResponse(json.dumps(data),content_type="application/json")
 
 def index_login(request):
 	data={}
-	if request.method=="POST":
-		if 'request_button' in request.POST:
-			data=register(request)
-			print data
-	else:
-		data['form']=UserEnrollForm()
-		data['login_form']=LoginForm()
-	return render(request,"home/login.html",data)
+	data['form']=UserEnrollForm()
+	data['login_form']=LoginForm()
+	return render(request,'home/login.html',data)
 	
 def index(request):
-	submit_status=False
-	sidebar_msg=''
-	user_enroll_form=''
-	login_form=''
+	user_enroll_form=UserEnrollForm()
+	login_form=LoginForm()
 	if not request.user.is_authenticated():
 		return index_login(request)
-	if request.method=='POST':
-		if 'login_button' in request.POST:
-			print 'login attempt'
-			data['msg']='hello'
-			return HttpResponse(json.dumps(data),content_type="application/json")
-			username=request.POST['username']
-			password=request.POST['password']
-			user=authenticate(username=username, password=password)
-			if user:
-				if user.is_active:
-					login(request,user)
-					sidebar_msg='Welcome !!'
-				else:
-					sidebar_msg='Your account is inavtive contact admin'
+	else:
+		friends=get_by_bday(request)
+		primary_friends=[]
+		for x in friends:
+			if x.date_of_birth.month==datetime.date.today().month and x.date_of_birth.day==datetime.date.today().day:
+				primary_friends.append(x)
 			else:
-				sidebar_msg='Login attemp failed! check username and password'
-		elif 'logout_button' in request.POST:
-			logout(request)
-			sidebar_msg='Successfully logged out'
-		elif 'request_button' in request.POST:
-			print "registration request"	
-			user_enroll_form=UserEnrollForm(request.POST,request.FILES);
-			if user_enroll_form.is_valid():
-				#create a inactive user and send request
-				#user_enroll_form.save()
-				form_data=user_enroll_form.cleaned_data
-				email=form_data['email']
-				reference=form_data['reference_email']
-				try:
-					reference=User.objects.get(email=reference)
-				except:
-					reference=False
-				if reference and reference.is_active:
-					print 'reference ok'
-					user=User(username=form_data['username'],password=form_data['password'],email=email)
-					user.first_name=form_data['first_name']
-					user.last_name=form_data['last_name']
-					user.is_active=False
-					user.save()
-					print user
-					user_friend=Friend()
-					user_friend.user=user
-					user_friend.date_of_birth=form_data['date_of_birth']
-					user_friend.image=form_data['date_of_birth']
-					user_friend.save()
-					print user_friend
-					user_friend.add_relationship(reference,FRIENDSHIP_REQUESTED)
-					data['status']=True
-					data['msg']='Congratulations!! you are now registered'
-				else:
-					data['status']=False
-					data['error']='invalid reference'
-				submit_status=True
-	if not user_enroll_form:
-		user_enroll_form=UserEnrollForm()
-	if not login_form:
-		login_form=LoginForm()
-	friends=get_by_bday(request)
-	primary_friends=[]
-	for x in friends:
-		if x.date_of_birth.month==datetime.date.today().month and x.date_of_birth.day==datetime.date.today().day:
-			primary_friends.append(x)
-		else:
-			break;
-	for x in primary_friends:
-		friends.remove(x)
-	data={
-		'add_friend_form':AddFriendForm(), 'sidebar_msg':sidebar_msg,
-		'submit_status':submit_status, 'is_index':True, 'form':user_enroll_form,
-		'friends':friends, 'primary_friends':primary_friends, 'login_form':login_form
+				break;
+		for x in primary_friends:
+			friends.remove(x)
+		data={
+			'add_friend_form':AddFriendForm(),
+			 'is_index':True,
+			 'form':user_enroll_form,
+			'friends':friends,
+			'primary_friends':primary_friends,
+			'login_form':login_form
 		}
-	return render(request,'home/index.html',data)
+		return render(request,'home/index.html',data)
 
 def listPosts(request,username):
 	friend=Friend.objects.get(user=User.objects.get(username=username))

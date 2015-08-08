@@ -314,44 +314,44 @@ function refreshFriendRequestList(request_id){
 	});
 }
 function refreshFriendList(primary_friends,friends){
-	console.log("reset friend list"+primary_friends.length+" "+friends.length);
-	$('#primary-friend-row').hide('slow');
-	$('#primary-friend-row').empty();
-	$.each(primary_friends,function(key,pf){
-		var new_div='\
-			<div class="col-sm-4 col-sm-offset-4" >\
-						<div class="thumbnail">\
-							<img src="'+pf['image']+'">\
-							<div class="caption">\
-								<h4>'+pf['name']+'<br><small>'+pf['dob']+'</small></h4>\
-								<a class="btn btn-primary" href="posts/'+pf['username']+'"><i class="fa fa-birthday-cake"></i></a>\
+	$('#primary-friend-row').hide('slow',function(){
+		$(this).empty();
+		$.each(primary_friends,function(key,pf){
+			var new_div='\
+				<div class="col-sm-4 col-sm-offset-4" >\
+							<div class="thumbnail">\
+								<img src="'+pf['image']+'">\
+								<div class="caption">\
+									<h4>'+pf['name']+'<br><small>'+pf['dob']+'</small></h4>\
+									<a class="btn btn-primary" href="posts/'+pf['username']+'"><i class="fa fa-birthday-cake"></i></a>\
+								</div>\
+								</img>\
 							</div>\
-							</img>\
+						</div>\
+			';
+			$('#primary-friend-row').append(new_div);
+		});
+		$(this).show('slow');
+	});
+	$('#friend-row').hide('slow',function(){
+		$(this).empty();
+		$.each(friends,function(key,pf){
+			new_div='\
+				<div class="col-xs-6 col-sm-3">\
+					<div class="thumbnail">\
+						<img src="'+pf['image']+'">\
+						<div class="caption">\
+							<h4>'+pf['name']+'<br><small>'+pf['dob']+'</small></h4>\
+							<a class="btn btn-primary" href="posts/'+pf['username']+'"><i class="fa fa-birthday-cake"></i></a>\
 						</div>\
 					</div>\
-		';
-		$('#primary-friend-row').append(new_div);
-	});
-	$('#primary-friend-row').show('slow');
-
-	$('#friend-row').hide('slow');
-	$('#friend-row').empty();
-	$.each(friends,function(key,pf){
-		new_div='\
-			<div class="col-xs-6 col-sm-3">\
-				<div class="thumbnail">\
-					<img src="'+pf['image']+'">\
-					<div class="caption">\
-						<h4>'+pf['name']+'<br><small>'+pf['dob']+'</small></h4>\
-						<a class="btn btn-primary" href="posts/'+pf['username']+'"><i class="fa fa-birthday-cake"></i></a>\
-					</div>\
 				</div>\
-			</div>\
-		';
-		//$(new_div).hide().appendTo('#friend-row').fadeIn();
-		$('#friend-row').append(new_div);
+			';
+			//$(new_div).hide().appendTo('#friend-row').fadeIn();
+			$('#friend-row').append(new_div);
+		});
+		$(this).show('slow');
 	});
-		$('#friend-row').show('slow');
 }
 function processRequest(accept,request_id){
 	$.ajax({
@@ -374,14 +374,68 @@ function processRequest(accept,request_id){
 		}
 	});
 }
+//registration
+function setRegistration(){
+	$('#registration-form').on('submit',function(event){
+		event.preventDefault();
+		registration();
+	});
+}
+function registration(){
+	var submit_button=$('#register-button');
+	addSpinner(submit_button);
+	$('.errorlist').each(function(i,ul){
+		$(this).empty();
+	});
+	var formData=new FormData($('#registration-form')[0])
+	$.ajax({
+		url:'/registration/',
+		type:"POST",
+		data:formData,
+		cache: false,
+		contentType: false,
+		processData: false,
+		success:function(json){
+			console.log(json);
+			if(json['status']){
+				setNotification(json['msg'],false);
+				$('#registration-form')[0].reset();
+				grecaptcha.reset();
+			}
+			else{
+				grecaptcha.reset();
+				if(json['errors']){
+					//field erros
+					$.each(json['errors'],function(key,errors){
+						ul=$('#registration-form-'+key+'-errors');
+						$.each(errors,function(index,error){
+							ul.append('\
+							<li><i class="fa fa-asterisk"></i> '+error+'</li>\
+							');
+						});
+					});
+				}
+				setNotification(json['error'],false);
+			}
+			removeSpinner(submit_button);
+		},
+		error:function(xhr,errmsg,err){
+			console.log("reg error");
+			console.log(xhr);
+			grecaptcha.reset();
+			removeSpinner(submit_button);
+		}
+	});
+}
 //initial setup calls
 
 setAddFriend();
 setLogin();
 setLogout();
 register_div=$('#get_listed');
-setAcceptRequest()
-setRejectRequest()
+setAcceptRequest();
+setRejectRequest();
+setRegistration();
 $('#notification-panel').hide();
 
 $(window).load(function(){

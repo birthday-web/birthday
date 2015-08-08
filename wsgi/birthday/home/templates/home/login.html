@@ -47,23 +47,24 @@
 						Thank you, your request has been registered.
 					</div>
 				{%endif%}
-				<form enctype="multipart/form-data" method="post" action="." class="form">
+				<form id="registration-form" enctype="multipart/form-data" method="post" action="." class="form">
 				{% csrf_token%}
 					{% for field in form.visible_fields%}
 						
 						<div class="form-group col-sm-6">
 							<label>{{field.label}}</label>
 							{{field}}
-							{% if field.errors%}
-								<ul class="errorlist">
+							
+								<ul id="registration-form-{{field.name}}-errors" class="errorlist">
 								{% for error in field.errors %}
 									<li><i class="fa fa-asterisk"></i> {{error}}</li>
 								{%endfor%}
 								</ul>
-							{%endif%}
 						</div>
 					{%endfor%}
-					<button class=" col-xs-4 col-md-2 col-md-offset-5 col-xs-offset-4 btn btn-primary" type="submit" name="request_button">Submit Request</button>
+					<div class="form-group col-sm-6 col-sm-offset-3 center">
+						<button id="register-button" class="btn btn-primary btn-lg"  type="submit" name="request_button">Register</button> <button type="reset" class=" btn btn-default btn-lg">Reset</button>
+					</div>
 				</form>			
 			</div>
 		</div>
