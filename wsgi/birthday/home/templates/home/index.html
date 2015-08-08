@@ -13,13 +13,13 @@
 {%endblock%}
 
 {%block sections%}
-	<div id="friends" class="section">
+	<div id="friends-section" class="section">
 		<div class="container">
 			<div class="row">
 				<h2 class="heading section-heading">Your Friends</h2>						
 			 </div>
 			 
-			 <div class="row">
+			 <div id="primary-friend-row" class="row">
 				{%for friend in primary_friends%}
 					{%ifequal primary_friends|length 1 %}
 					<div class="col-sm-4 col-sm-offset-4">
@@ -29,7 +29,7 @@
 						<div class="thumbnail">
 							<img src="{{friend.image_url}}">
 							<div class="caption">
-								<h4 >{{friend.user.get_full_name|default:friend.user.username}}<br><small>{{friend.date_of_birth}}</small></h4>
+								<h4 >{{friend.user.get_full_name|default:friend.user.username}}<br><small>{{friend.date_of_birth|date:"d, M"}}</small></h4>
 								<a class="btn btn-primary" href="posts/{{friend.user.username}}"><i class="fa fa-birthday-cake"></i></a>
 							</div>
 							</img>
@@ -37,13 +37,13 @@
 					</div>
 				{%endfor%}
 			 </div>
-			 <div class="row">
+			 <div id="friend-row" class="row">
 				{%for friend in friends%}
 					<div class="col-xs-6 col-sm-3">
 						<div class="thumbnail">
 							<img src="{{friend.image_url}}">
 							<div class="caption">
-								<h4 >{{friend.user.get_full_name|default:friend.user.username}}<br><small>{{friend.date_of_birth}}</small></h4>
+								<h4 >{{friend.user.get_full_name|default:friend.user.username}}<br><small>{{friend.date_of_birth|date:"d, M"}}</small></h4>
 								<a class="btn btn-primary" href="posts/{{friend.user.username}}"><i class="fa fa-birthday-cake"></i></a>
 							</div>
 							</img>
@@ -55,15 +55,15 @@
 	</div>
 	<!-- New Friend Requests List-->
 	{%if request.user.friend.friend_requests|length > 0 %}
-	<div class="section">
+	<div id="friend-request-section"  class="section">
 		<div class="container">
 			<div class="row">
 				<h2 class="heading section-heading">Do You Know Them ?</h2>						
 			 </div>
-			 <ul class="friend-requests">
+			 <ul id="friend-request-list" class="friend-requests">
 			 	{%for fr in request.user.friend.friend_requests%}
-			 		<li>
-			 			<i class="fa fa-user"></i> {{fr.from_person.user.get_full_name}} - {{fr.from_person.user.email}} <a href="request_accept/{{fr.pk}}"><i class="fa fa-check"></i></a> <a href="request_reject/{{fr.pk}}"><i class="fa fa-close"></i></a>
+			 		<li id="request-{{fr.pk}}">
+			 			<img width="50px" src="{{fr.from_person.image.url}}"/> <label>{{fr.from_person.user.get_full_name}}</label> - {{fr.from_person.user.email}} <button class="btn btn-primary btn-xs accept-request" data-pk="{{fr.pk}}" >Yes</button> <button class=" btn btn-default btn-xs reject-request" data-pk="{{fr.pk}}">No</button>
 			 		</li>
 			 	{%endfor%}
 			 </ul>
@@ -71,7 +71,7 @@
 	</div>
 	{%endif%}
 	<!-- Add new Friend form-->
-		<div class="section">
+		<div id="new-friend-section" class="section">
 		<div class="container">
 			<div class="row">
 				<h2 class="heading section-heading">Add new Friend</h2>						

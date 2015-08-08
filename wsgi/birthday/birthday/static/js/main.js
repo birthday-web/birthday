@@ -1,19 +1,19 @@
-function setLogin(){
-	$('#login-form').on('submit',function(event){
-		event.preventDefault();
-		doLogin(false);
-	});
-	$('#login-form-main').on('submit',function(event){
-		event.preventDefault();
-		doLogin(true);
-	});
-}
-
-function setLogout(){
-	$('#logout-form').on('submit',function(event){
-		event.preventDefault();
-		doLogout();
-	});
+notification_timer=''
+spinner='<i class="fa fa-spinner fa-spin notification-spinner"></i>';
+function setNotification(msg,reload){
+	$('.notification-spinner').remove();
+	$('#notification-panel').html(msg+(reload?' '+spinner:'')+'<br>'+$('#notification-panel').html());
+	$('#notification-panel').fadeIn('slow');
+	clearTimeout(notification_timer);
+	notification_timer=setTimeout(function(){
+		$('#notification-panel').fadeOut('slow',function(){
+			$('#notification-panel').html('');
+			if(reload){
+				location.reload(true);
+			}
+		});
+		
+	},(reload?1000:3000));
 }
 
 function getCookie(name) {
@@ -73,8 +73,9 @@ function removeSpinner(button){
 	button.children('.fa-spin').remove()
 }
 
-login_msg_timer=''
+//login logout
 
+/*login_msg_timer=''
 function setLoginMsg(msg,success,main){
 	if(main){
 		login_msg=$('#login-msg-main');
@@ -90,10 +91,6 @@ function setLoginMsg(msg,success,main){
 		clearTimeout(login_msg_timer);
 		login_msg_timer=setTimeout(function(){
 			location.reload(true);
-			/*$('#login_msg').fadeOut(500,function(){
-				$(this).css({"visibility":"hidden","display":'block'}).slideUp();
-				
-			});*/
 		},1000);
 		
 	}else{
@@ -108,6 +105,13 @@ function setLoginMsg(msg,success,main){
 			});
 		},4000);
 	}
+}
+*/
+function setLogout(){
+	$('#logout-form').on('submit',function(event){
+		event.preventDefault();
+		doLogout();
+	});
 }
 function doLogout(){
 	var csrftoken=getCookie('csrftoken');
@@ -125,8 +129,8 @@ function doLogout(){
     	},
     	success:function(json){
     		console.log("logout");
-    		if(json['success']){
-	    		setLoginMsg('Succeessfully Sign out',true,false);
+    		if(json['status']){
+	    		setNotification(json['msg'],true);
     			$('#before-login').hide();
     			$('#before-login').html('\
     				<h4 class="heading">Login </h4>\
@@ -156,8 +160,18 @@ function doLogout(){
     		console.log("error logout");
     	}
 });
-	
 }
+function setLogin(){
+	$('#login-form').on('submit',function(event){
+		event.preventDefault();
+		doLogin(false);
+	});
+	$('#login-form-main').on('submit',function(event){
+		event.preventDefault();
+		doLogin(true);
+	});
+}
+
 function doLogin(main){
 	if(main){
 		login_form=$('#login-form-main');
@@ -184,12 +198,8 @@ function doLogin(main){
         	}
     	},
     	success:function(json){
-    		if(json['success']){
-    		//show message done
-    		//hide login form done
-    		//show data done
-    		//hide register form
-   			setLoginMsg('Login succeessful',true,main)
+    		if(json['status']){
+	   			setNotification(json['msg'],true);
     			$('#after-login').hide();
     			$('#after-login').html('\
     				<div class="thumbnail">\
@@ -212,20 +222,24 @@ function doLogin(main){
     			});
     			setLogout();
     			remove_register_div();
+    			
     		}
-    		else if(json['error']){
-    			setLoginMsg('Login attempt failed',false,main);
+    		else{
+    			setNotification(json['error'],false);
     		}
     		updateCsrf();
     		removeSpinner(login_button);
     	},
     	error: function(xhr,errmsg,err){
-    		setLoginMsg('Login attempt failed',false,main);
+    		setNotification('Login attempt failed',false);
 			removeSpinner(login_button);
     	}
 	});
 	
 }
+
+//adding new friend
+/*
 add_friend_msg_timer=''
 function setAddFriendMsg(msg,success){
 	$('#add-friend-msg').html('<div class="alert alert-'+(success?'success':'danger')+'">'+msg+'</div>');
@@ -239,6 +253,13 @@ function setAddFriendMsg(msg,success){
 			});
 		},4000);
 }
+*/
+function setAddFriend(){
+	$("#add-friend-form").on('submit',function(event){
+		event.preventDefault();
+		AddFriend();
+	})
+}
 function AddFriend(){
 	form=$('#add-friend-form');
 	submit_button=$('#add-friend-submit-button');
@@ -249,10 +270,10 @@ function AddFriend(){
 		type:"POST",
 		success:function(json){
 			if(json['result']){
-				setAddFriendMsg(json['msg'],true);
+				setNotification(json['msg'],false);
 			}
 			else{
-				setAddFriendMsg(json['error'],false);
+				setNotification(json['error'],false);
 			}
 			removeSpinner(submit_button);
 		},
@@ -262,17 +283,106 @@ function AddFriend(){
 		},
 	});
 }
-function setAddFriend(){
-	$("#add-friend-form").on('submit',function(event){
-		event.preventDefault();
-		AddFriend();
-	})
+
+//accept reject friend requests
+function setAcceptRequest(){
+	$(".accept-request").each(function(){
+		$(this).on('click',function(event){
+			event.preventDefault();
+			processRequest(true,$(this).data("pk"));
+		});
+	});
 }
+function setRejectRequest(){
+	$(".reject-request").each(function(){
+		$(this).on('click',function(event){
+			event.preventDefault();
+			processRequest(false,$(this).data("pk"));
+		});
+	});
+}
+function refreshFriendRequestList(request_id){
+	$('#request-'+request_id).hide('slow',function(){
+		$(this).remove();
+		if($('#friend-request-list li').length > 0)
+			console.log("stay");
+		else{
+			$('#friend-request-section').hide('slow',function(){
+				$(this).remove();
+			});
+		}
+	});
+}
+function refreshFriendList(primary_friends,friends){
+	console.log("reset friend list"+primary_friends.length+" "+friends.length);
+	$('#primary-friend-row').hide('slow');
+	$('#primary-friend-row').empty();
+	$.each(primary_friends,function(key,pf){
+		var new_div='\
+			<div class="col-sm-4 col-sm-offset-4" >\
+						<div class="thumbnail">\
+							<img src="'+pf['image']+'">\
+							<div class="caption">\
+								<h4>'+pf['name']+'<br><small>'+pf['dob']+'</small></h4>\
+								<a class="btn btn-primary" href="posts/'+pf['username']+'"><i class="fa fa-birthday-cake"></i></a>\
+							</div>\
+							</img>\
+						</div>\
+					</div>\
+		';
+		$('#primary-friend-row').append(new_div);
+	});
+	$('#primary-friend-row').show('slow');
+
+	$('#friend-row').hide('slow');
+	$('#friend-row').empty();
+	$.each(friends,function(key,pf){
+		new_div='\
+			<div class="col-xs-6 col-sm-3">\
+				<div class="thumbnail">\
+					<img src="'+pf['image']+'">\
+					<div class="caption">\
+						<h4>'+pf['name']+'<br><small>'+pf['dob']+'</small></h4>\
+						<a class="btn btn-primary" href="posts/'+pf['username']+'"><i class="fa fa-birthday-cake"></i></a>\
+					</div>\
+				</div>\
+			</div>\
+		';
+		//$(new_div).hide().appendTo('#friend-row').fadeIn();
+		$('#friend-row').append(new_div);
+	});
+		$('#friend-row').show('slow');
+}
+function processRequest(accept,request_id){
+	$.ajax({
+		url:'/request_'+(accept?'accept':'reject')+'/'+request_id,
+		type:"GET",
+		success:function(json){
+			console.log(json);
+			if(json['status']){
+				setNotification(json['msg']);
+				refreshFriendRequestList(request_id);
+				//add firend to existing list
+				refreshFriendList(json['primary_friends'],json['friends']);
+			}
+			else{
+				setNotification(json['error']);
+			}
+		},
+		error:function(xhr,errmsg,err){
+			console.log(errmsg);
+		}
+	});
+}
+//initial setup calls
+
 setAddFriend();
 setLogin();
 setLogout();
 register_div=$('#get_listed');
-
+setAcceptRequest()
+setRejectRequest()
+$('#notification-panel').hide();
 
 $(window).load(function(){
   $(".js-toggle-sidebar").on('click', function() {

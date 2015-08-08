@@ -19,7 +19,6 @@ class LoginForm(forms.ModelForm):
 		
 class UserEnrollForm(forms.ModelForm):
 	captcha=NoReCaptchaField(error_messages={'required':'This check is mandatory.'})
-	reference_email=forms.EmailField(widget=forms.TextInput(attrs={'class':'form-control','required':True,'placeholder':'Email of your registered friend'}))
 	class Meta:
 		model= UserEnroll
 		fields=['first_name','last_name','email','date_of_birth','username','password','image','reference_email','captcha']
@@ -27,6 +26,7 @@ class UserEnrollForm(forms.ModelForm):
 			'first_name':forms.TextInput(attrs={'class': 'form-control','required':True,'placeholder':'First Name'}),
 			'last_name':forms.TextInput(attrs={'class': 'form-control','required':True,'placeholder':'Last Name'}),
 			'email':forms.TextInput(attrs={'class': 'form-control','required':True,'placeholder':'Email'}),
+			'reference_email':forms.TextInput(attrs={'class':'form-control','required':True,'placeholder':'Email of your registered friend'}),
 			'date_of_birth':forms.DateInput(attrs={'class': 'form-control','type':'date','placeholder':'mm/dd/yyyy'}),
 			'username':forms.TextInput(attrs={'class': 'form-control','required':True,'placeholder':'Username'}),
 			'password':forms.PasswordInput(attrs={'class': 'form-control','Placeholder':'Password'}),
@@ -39,12 +39,16 @@ class UserEnrollForm(forms.ModelForm):
             'email':{
 				'unique':"This email is already registered."
             },
+            'reference_email':{
+            	'required':'You need a reference email'
+            },
             'date_of_birth':{
 				'required':"Oh common! you must have date of birth."
             },
             'image':{
 				'required':"Select your image."
             }
+            
         }
 class PostForm(forms.ModelForm):
 	class Meta:

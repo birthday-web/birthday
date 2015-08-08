@@ -33,7 +33,7 @@ class Friend(models.Model):
 	def add_relationship(self,friend,status,symm=True):
 		friendship,created=Friendship.objects.get_or_create(from_person=self,to_person=friend,status=status)
 		if symm:
-			friend.add_friendship(self,status,False)
+			friend.add_relationship(self,status,False)
 		return friendship
 		
 	def remove_relationship(self,friend,status,symm=True):
@@ -133,6 +133,7 @@ class UserEnroll(models.Model):
 	first_name=models.CharField(max_length=50)
 	last_name=models.CharField(max_length=50)
 	email=models.EmailField(unique=True)
+	reference_email=models.EmailField()
 	username=models.CharField(max_length=50,unique=True)
 	password=models.CharField(max_length=50)
 	date_of_birth=models.DateField("Date of Birth")

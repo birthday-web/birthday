@@ -439,5 +439,32 @@ body {
 
 .friend-requests {
   list-style: none; }
+  .friend-requests li {
+    margin: 5px;
+    padding: 10px; }
+
+.notification-panel {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  z-index: 4;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 10px;
+  background-color: #333;
+  color: white; }
+
+.green {
+  color: green; }
+  .green:hover, .green:visited {
+    color: green; }
+
+.red {
+  color: red; }
+  .red:hover, .red:visited {
+    color: red; }
+
+.btn-xs {
+  font-size: 10px; }
 
 /*# sourceMappingURL=main.css.map */
