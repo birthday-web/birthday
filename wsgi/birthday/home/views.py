@@ -303,8 +303,8 @@ def delPost(request,username,post_id):
 			post=Post.objects.get(pk=post_id)
 			if post.author.user==request.user:
 				path=post.image.url
-				#os.remove(path)
-				#post.delete()
+				os.remove(path)
+				post.delete()
 				data['result']=True
 				data['msg']='Post deleted successfully'
 			else:

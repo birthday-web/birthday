@@ -4,7 +4,8 @@ function confirm(name,pk){
 		deleteItem(name,pk)
 		$(".confirm-box .content").fadeOut("slow",function(){
 			$(".confirm-box ").hide();	
-		});	
+		});
+		$(this).off('click');
 	});
 	$(".confirm-box .no").on("click",function(event){
 		event.preventDefault();
@@ -142,7 +143,7 @@ function addPost(post){
 	new_post.hide();
 	new_post.show('slow');
 	setComment();
-	
+	setDelete();
 }
 function createPost(){
 	clearPostFormErrors();
