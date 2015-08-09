@@ -7,3 +7,5 @@
 .pydevproject
 wsgi/birthday/media/
 .sass-cache/
+*.css.map
+
