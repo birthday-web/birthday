@@ -207,8 +207,39 @@ def index(request):
 		}
 		return render(request,'home/index.html',data)
 
+def createComment(request,username):
+	data={}
+	print "create comment "
+	if request.method=='POST':
+		friend=User.objects.get(username=username).friend
+		print 'post'
+		if request.user.is_authenticated() and friend in request.user.friend.get_friendships():
+			print 'authenticated'
+			author=request.user.friend
+			comment_form=CommentForm(request.POST)
+			if comment_form.is_valid():
+				print 'comment valid'
+				comment=comment_form.save(commit=False)
+				comment.author=author
+				comment.save()
+				data['status']=True
+				data['msg']='Comment Created'
+				data['comment']={'post_pk':comment.post.pk,'comment_pk':comment.pk,'author_username':author.user.username,'author_name':author.user.get_full_name(),'comment':comment.comment}
+			else:
+				print 'form invalid'
+				data['status']=False
+				data['error']='Invalid data'
+				data['errors']=comment_form.errors
+		else:
+			data['status']=False
+			data['error']='You are not authorized to perform this operation'
+	else:
+		data['status']=False
+		data['error']='InvalidRequest'
+	return HttpResponse(json.dumps(data),content_type="application/json")
+	
 def listPosts(request,username):
-	friend=Friend.objects.get(user=User.objects.get(username=username))
+	friend=User.objects.get(username=username).friend
 	'''
 	checks required
 	1. user is authenticated
@@ -217,7 +248,7 @@ def listPosts(request,username):
 	#check number 1 and 2
 	if request.user.is_authenticated() and friend in request.user.friend.get_friendships():
 		if request.method=='POST':
-		#POST request
+			#POST request
 			author=request.user.friend
 			if 'post_button' in request.POST:
 				post_form=PostForm(request.POST,request.FILES)
@@ -227,17 +258,6 @@ def listPosts(request,username):
 					post.friend=friend
 					post.save()
 					post_form=PostForm()
-			elif 'comment_button' in request.POST:
-				comment_form=CommentForm(request.POST)
-				if comment_form.is_valid():
-					print 'comment valid'
-					comment=comment_form.save(commit=False)
-					comment.author=author
-					comment.save()
-				else:
-					print 'comment invalid'
-				post_form=PostForm()
-			
 		else:
 			#GET request
 			post_form=PostForm()
@@ -246,27 +266,56 @@ def listPosts(request,username):
 	else:
 	#User not authenticated
 		return HttpResponseRedirect("/")
-	
+
+def createPost(request,username):
+	data={}
+	friend=User.objects.get(username=username).friend
+	if request.user.is_authenticated() and friend in request.user.friend.get_friendships():
+		if request.method=='POST':
+			#POST request
+			author=request.user.friend
+			post_form=PostForm(request.POST,request.FILES)
+			if post_form.is_valid():
+				post=post_form.save(commit=False)
+				post.author=author
+				post.friend=friend
+				post.save()
+				post_form=PostForm()
+				data['status']=True
+				data['msg']='Post created successfully'
+				data['post']={'image':post.image.url,'caption':post.caption,'author_name':post.author.user.get_full_name(),'author_username':post.author.user.username,'post_pk':post.pk}
+			else:
+				data['status']=False
+				data['error']='Post contain invalid data'
+				data['errors']=post_form.errors
+		else:
+			data['status']=False
+			data['error']='Invalid request'
+	else:
+		data['status']=False
+		data['error']='You are not authorized to perform this operation'
+	return HttpResponse(json.dumps(data),content_type="application/json")
+
 def delPost(request,username,post_id):
 	data={}
 	if request.user.is_authenticated():
 		try:
 			post=Post.objects.get(pk=post_id)
 			if post.author.user==request.user:
-				#path=post.image.url
+				path=post.image.url
 				#os.remove(path)
 				#post.delete()
 				data['result']=True
-				data['msg']='Item deleted'
+				data['msg']='Post deleted successfully'
 			else:
 				data['result']=False
-				data['msg']='Your are not owner of this item'
+				data['error']='Your are not owner of this item'
 		except:
 			data['result']=False
-			data['msg']='Error occured'
+			data['error']='Error occured'
 	else:
 		data['result']=False
-		data['msg']='User not authenticated'
+		data['error']='User not authenticated'
 	return HttpResponse(json.dumps(data),content_type="application/json")
 	
 def delComment(request,username,comment_id):
@@ -275,19 +324,19 @@ def delComment(request,username,comment_id):
 		try:
 			comment=Comment.objects.get(pk=comment_id)
 			if comment.author.user == request.user:
-				#comment.delete()
+				comment.delete()
 				data['result']=True
-				data['msg']='Item deleted'
+				data['msg']='Comment deleted successfully'
 			else:
 				data['result']=False
 				data['msg']='Your are not owner of this item'
-		except Exception as e:
+		except ObjectDoesNotExist as e:
 			data['result']=False
-			data['msg']='Error occured'
+			data['error']='Error occured'
 			data['err']=e
 	else:
 		data['result']=False
-		data['msg']='User not authenticated'
+		data['error']='User not authenticated'
 	return HttpResponse(json.dumps(data),content_type="application/json")
 
 def get_friend_list(request):

@@ -44,23 +44,166 @@ function deleteItem(name,pk){
     		success:function(json){
     			console.log(json);
     			if(json['result']){
-    				console.log("success");
-    				//remove post/cmt
     				removeItem(name,pk)
+    				setNotification(json['msg']);
     			}else{
-    				console.log("failure");
-    				//do nothing show error optional
+    				setNotification(json['error']);
     			}
 			},
 			error:function(xhr,errmsg,err){
-				//do nothing show error optional
+				setNotification('Something bad happened, try again!!')
 			}
 		});
 	}
 }
-$(".delete a").each(function(i,item){
-	$(this).on("click",function(event){
-		event.preventDefault();
-		confirm($(this).prop("name"),$(this).data("pk"));
+function addComment(comment){
+	ul=$('#comments-'+comment['post_pk'])
+	ul.append('\
+		<li>\
+			<div class="delete delete-comment" ">\
+				<a name="cmt" data-pk="'+comment['comment_pk']+'" href="#" title="Delete this comment"><i class="fa fa-times-circle"></i></a>\
+			</div>\
+			<a href="/posts/'+comment['author_username']+'" ><h6>'+comment['author_name']+'</h6></a>\
+			<p>'+comment['comment']+'</p>\
+		</li>\
+	');
+	li=ul.children().last();
+	li.hide();
+	li.slideDown('slow',function(){
+		$(this).css({'visibility':'visible','display':'block'}).fadeIn(1000);
+	});
+	setDelete();
+}
+function createComment(form){
+	var csrftoken=getCookie('csrftoken');
+	$.ajax({
+		url:'./create_comment/',
+		data:form.serialize(),
+		method:"POST",
+		beforeSend: function(xhr, settings) {
+			$("#logout-button").html("Signout <i class=\"fa fa-spinner fa-spin\"></i>");
+        	if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+        	    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        	}
+    	},
+		success:function(json){
+			if(json['status']){
+				setNotification(json['msg'],false);
+				addComment(json['comment']);
+				form[0].reset();
+			}
+			else{
+				setNotification(json['error'],false);
+			}
+		},
+		error:function(xhr,errmsg,err){
+			console.log(xhr);
+		}
+	});
+}
+function clearPostFormErrors(){
+	$('.post-form-errors').each(function(i,ul){
+		$(this).empty();
 	})
-});
+}
+function addPost(post){
+	var posts=$('#posts-section-container')
+	posts.append('\
+		<div class="col-sm-4">\
+					<div class="thumbnail">\
+						<div class="delete delete-post" >\
+							<a name="post" data-pk="'+post['post_pk']+'" href="#" title="Delete this post"><i class="fa fa-times-circle"></i></a>\
+						</div>\
+						<img src="'+post['image']+'"/>\
+						<div class="caption">\
+						'+post['caption']+'\
+							<hr>\
+							Author - <a href="/posts/'+post['author_username']+'">'+post['author_name']+'</a>\
+							<hr>\
+								<div>\
+									<ul id="comments-'+post['post_pk']+'" class="comments">\
+									</ul>\
+								</div>\
+								<form class="comment-form" action="." method="post">\
+									<input type="hidden" name="csrfmiddlewaretoken" value="'+getCookie("csrftoken")+'" />\
+										<div class="form-group">\
+											<input class="form-control" id="id_comment" maxlength="200" name="comment" placeholder="Comment" type="text" required />\
+										</div>\
+									<input id="id_post" name="post" type="hidden" value="'+post['post_pk']+'">\
+									<div class="form-group">\
+										<button class="btn btn-primary" name="comment_button" type="submit"><i class="fa fa-send"></i></button>\
+									</div>\
+								</form>\
+						</div>\
+					</div>\
+				</div>\
+	');
+	var new_post=posts.children().last();
+	new_post.hide();
+	new_post.show('slow');
+	setComment();
+	
+}
+function createPost(){
+	clearPostFormErrors();
+	var formData=new FormData($('#post-form')[0])
+	$.ajax({
+		url:'./create_post/',
+		type:"POST",
+		data:formData,
+		cache: false,
+		contentType: false,
+		processData: false,
+		success:function(json){
+			if(json['status']){
+				setNotification(json['msg'],false);
+				$('#post-form')[0].reset();
+				addPost(json['post']);
+			}
+			else{
+				setNotification(json['error'],false);
+				if(json['errors']){
+					console.log(json['errors']);
+					$.each(json['errors'],function(field,errors){
+						ul=$('#post-'+field);
+						$.each(errors,function(index,error){
+							ul.append('\
+							<li><i class="fa fa-asterisk"></i> '+error+'</li>\
+							');
+						});
+					});
+				}
+			}
+		},
+		error:function(xhr,errmsg,err){
+			setNotification('something went wrong, try again !!',false);
+			console.log(xhr);
+		}
+	});
+}
+function setDelete(){
+	$(".delete a").each(function(i,item){
+		$(this).on("click",function(event){
+			event.preventDefault();
+			confirm($(this).prop("name"),$(this).data("pk"));
+		})
+	});
+}
+function setComment(){
+	$('.comment-form').each(function(){
+		$(this).on('submit',function(event){
+			event.preventDefault();
+			createComment($(this));
+		});
+	});
+}
+function setPost(){
+	$('#post-form').on('submit',function(event){
+		event.preventDefault();
+		createPost();
+	});
+}
+setDelete();
+setComment();
+setPost();
+
