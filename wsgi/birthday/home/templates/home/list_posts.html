@@ -50,7 +50,7 @@
 					<div class="thumbnail">
 						{% if post.author.user == user%}
 						<div class="delete delete-post" >
-							<a name="post" data-pk="{{post.pk}}" href="delpost/{{post.id}}" title="Delete this post"><i class="fa fa-close"></i></a>
+							<a name="post" data-pk="{{post.pk}}" href="delpost/{{post.id}}" title="Delete this post"><i class="fa fa-times-circle"></i></a>
 						</div>
 						{%endif%}
 						<img src="{{post.get_image_url }}"/>
@@ -66,7 +66,7 @@
 										<li>
 											{% if comment.author.user == user%}
 												<div class="delete delete-comment" >
-													<a name="cmt" data-pk="{{comment.pk}}" href="delcmt/{{comment.id}}" title="Delete this comment"><i class="fa fa-close"></i></a>
+													<a name="cmt" data-pk="{{comment.pk}}" href="delcmt/{{comment.id}}" title="Delete this comment"><i class="fa fa-times-circle"></i></a>
 												</div>
 											{%endif%}
 											<a href="/posts/{{comment.author.user.username}}" ><h6>{{comment.author.user.get_full_name}}</h6></a>

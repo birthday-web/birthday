@@ -441,8 +441,14 @@ body{
 	.btn{
 		width:100%;
 	}
+	.delete-post{
+		display:none;
+	}
 	&:hover{
 		box-shadow:10px 10px 10px rgba(0, 0, 0, 0.5);
+		.delete-post{
+			display:block;
+		}
 	}
 }
 .btn-primary{
@@ -524,6 +530,14 @@ body{
 			word-break: break-all;
 			word-break: break-word;
 		}
+		.delete-comment{
+			display:none;
+		}
+		&:hover{
+			.delete-comment{
+				display:block;
+			}	
+		}
 	}
 }
 .header-box{
@@ -554,9 +568,11 @@ body{
 }
 .delete-post{
 	position:absolute;
-	right:3px;
-	top:-13px;
-	display:block;
+	right:17px;
+	top:2px;
+	background-color:white;
+	padding:3px 6px 3px 6px;
+	border-radius: 0 0 0 5px;
 	a{
 		position:relative;
 	}

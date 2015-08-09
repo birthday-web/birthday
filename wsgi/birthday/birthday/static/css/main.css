@@ -332,8 +332,12 @@ body {
   transition-duration: 0.3s; }
   .thumbnail .btn {
     width: 100%; }
+  .thumbnail .delete-post {
+    display: none; }
   .thumbnail:hover {
     box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5); }
+    .thumbnail:hover .delete-post {
+      display: block; }
 
 .btn-primary {
   background-color: #f67280;
@@ -401,6 +405,10 @@ body {
     .comments li p {
       word-break: break-all;
       word-break: break-word; }
+    .comments li .delete-comment {
+      display: none; }
+    .comments li:hover .delete-comment {
+      display: block; }
 
 .header-box {
   text-align: center;
@@ -428,9 +436,11 @@ body {
 
 .delete-post {
   position: absolute;
-  right: 3px;
-  top: -13px;
-  display: block; }
+  right: 17px;
+  top: 2px;
+  background-color: white;
+  padding: 3px 6px 3px 6px;
+  border-radius: 0 0 0 5px; }
   .delete-post a {
     position: relative; }
 
