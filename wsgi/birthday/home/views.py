@@ -306,7 +306,7 @@ def delPost(request,username,post_id):
 				path=post.image.url
 				if settings.DEPLOY:
 					path=path.split('/')
-					os.remove(os.environ['OPENSHIFT_DATA_DIR']+'/'.join(path[1:]))
+					os.remove(os.environ['OPENSHIFT_DATA_DIR']+'/images/'+('/'.join(path[2:])))
 				else:
 					os.remove(path)
 				post.delete()
