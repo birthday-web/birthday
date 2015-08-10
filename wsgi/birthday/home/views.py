@@ -310,9 +310,10 @@ def delPost(request,username,post_id):
 			else:
 				data['result']=False
 				data['error']='Your are not owner of this item'
-		except:
+		except Exception as ex:
 			data['result']=False
 			data['error']='Error occured'
+			data['exception']=str(ex)
 	else:
 		data['result']=False
 		data['error']='User not authenticated'
