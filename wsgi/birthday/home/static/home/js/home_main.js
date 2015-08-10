@@ -1,22 +1,36 @@
 function confirm(name,pk){
 	$(".confirm-box .yes").on("click",function(event){
 		event.preventDefault();
-		deleteItem(name,pk)
-		$(".confirm-box .content").fadeOut("slow",function(){
-			$(".confirm-box ").hide();	
-		});
-		$(this).off('click');
+		$(this).off("click");
+		console.log($(this));
+		if($(this).data('processing')===false){
+			$(".confirm-box .yes").data('processing',true);
+			deleteItem(name,pk);
+			$(".confirm-box .content").fadeOut("slow",function(){
+				$(".confirm-box ").hide();
+				$(".confirm-box .yes").data('processing',false);
+			});
+		}
 	});
+	
 	$(".confirm-box .no").on("click",function(event){
 		event.preventDefault();
+		$(this).off("click");
 		$(".confirm-box .content").fadeOut("slow",function(){
-			$(".confirm-box ").hide();
+			$(".confirm-box ").hide(0,function(){
+			});
 		});
 	});
 	$(".confirm-box ").show(0,function(){
 		$(".confirm-box .content").fadeIn("slow");
 	});
 	
+}
+function addCommentSpinner(button){
+	button.html('<i class="fa fa-spinner fa-spin"></i>');
+}
+function removeCommentSpinner(button){
+	button.html('<i class="fa fa-send"></i>');
 }
 
 function removeItem(name,pk){
@@ -45,14 +59,14 @@ function deleteItem(name,pk){
     		success:function(json){
     			console.log(json);
     			if(json['result']){
-    				removeItem(name,pk)
+    				removeItem(name,pk);
     				setNotification(json['msg']);
     			}else{
     				setNotification(json['error']);
     			}
 			},
 			error:function(xhr,errmsg,err){
-				setNotification('Something bad happened, try again!!')
+				setNotification('Something bad happened, try again!!');
 			}
 		});
 	}
@@ -76,6 +90,8 @@ function addComment(comment){
 	setDelete();
 }
 function createComment(form){
+	console.log(form.find('input[type="submit"]'))
+	addCommentSpinner(form.find('button[type="submit"]'));
 	var csrftoken=getCookie('csrftoken');
 	$.ajax({
 		url:'./create_comment/',
@@ -96,9 +112,13 @@ function createComment(form){
 			else{
 				setNotification(json['error'],false);
 			}
+			removeCommentSpinner(form.find('button[type="submit"]'));
+			form.data('processing',false);
 		},
 		error:function(xhr,errmsg,err){
 			console.log(xhr);
+			removeCommentSpinner(form.find('button[type="submit"]'));
+			form.data('processing',false);
 		}
 	});
 }
@@ -145,8 +165,9 @@ function addPost(post){
 	setComment();
 	setDelete();
 }
-function createPost(){
+function createPost(form){
 	clearPostFormErrors();
+	addSpinner(form.find('button[name="post_button"]'));
 	var formData=new FormData($('#post-form')[0])
 	$.ajax({
 		url:'./create_post/',
@@ -175,15 +196,21 @@ function createPost(){
 					});
 				}
 			}
+			form.data('processing',false);
+			removeSpinner($('button[name="post_button"]'));
+			
 		},
 		error:function(xhr,errmsg,err){
 			setNotification('something went wrong, try again !!',false);
 			console.log(xhr);
+			removeSpinner($('button[name="post_button"]'));
+			form.data('processing',false);
 		}
 	});
 }
 function setDelete(){
 	$(".delete a").each(function(i,item){
+		$(this).off("click");
 		$(this).on("click",function(event){
 			event.preventDefault();
 			confirm($(this).prop("name"),$(this).data("pk"));
@@ -192,16 +219,29 @@ function setDelete(){
 }
 function setComment(){
 	$('.comment-form').each(function(){
+		$(this).off('submit');
 		$(this).on('submit',function(event){
 			event.preventDefault();
-			createComment($(this));
+			if($(this).data('processing')===false){
+				$(this).data('processing',true);
+				createComment($(this));
+			}
+			else{
+				setNotification('wait for previous action to complete',false);
+			}
 		});
 	});
 }
 function setPost(){
+	$('#post-form').off('submit');
 	$('#post-form').on('submit',function(event){
-		event.preventDefault();
-		createPost();
+	event.preventDefault();
+	if($(this).data('processing')===false){
+		$(this).data('processing',true);
+		createPost($(this));
+	}else{
+		setNotification('wait for previous action to complete',false);
+	}
 	});
 }
 setDelete();
