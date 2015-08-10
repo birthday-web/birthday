@@ -145,7 +145,7 @@ function addPost(post){
 									<ul id="comments-'+post['post_pk']+'" class="comments">\
 									</ul>\
 								</div>\
-								<form class="comment-form" action="." method="post">\
+								<form data-processing="false" class="comment-form" action="." method="post">\
 									<input type="hidden" name="csrfmiddlewaretoken" value="'+getCookie("csrftoken")+'" />\
 										<div class="form-group">\
 											<input class="form-control" id="id_comment" maxlength="200" name="comment" placeholder="Comment" type="text" required />\
