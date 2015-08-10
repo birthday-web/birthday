@@ -13,6 +13,7 @@ from django.template.context_processors import csrf
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 import traceback
+from django.conf import settings
 
 def err_404(request):
 	return render(request,'404.html')
@@ -303,7 +304,11 @@ def delPost(request,username,post_id):
 			post=Post.objects.get(pk=post_id)
 			if post.author.user==request.user:
 				path=post.image.url
-				os.remove(path)
+				if settings.DEPLOY:
+					path=path.split('/')
+					os.remove(os.environ['OPENSHIFT_DATA_DIR']+'/'.join(path[1:]))
+				else:
+					os.remove(path)
 				post.delete()
 				data['result']=True
 				data['msg']='Post deleted successfully'
